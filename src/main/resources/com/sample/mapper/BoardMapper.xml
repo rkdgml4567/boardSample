@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  <mapper namespace="com.sample.mapper.BoardMapper">
+  	
+  	<select id="getList" resultType="com.sample.vo.BoardVO">
+  		<![CDATA[
+  		select  * from abl_board 
+  		where bno>0 
+  		order by bno desc
+  		
+  		]]>
+  	</select>
+  	
+  	<select id="get" resultType="com.sample.vo.BoardVO">
+  		
+  		select * from abl_board 
+  		where	bno=#{bno}
+  		
+  		
+  	</select>
+  	
+  	<insert id="register">
+  		<selectKey keyProperty="bno" order="BEFORE" resultType="long">
+  			select seq_board.nextval from dual
+  		</selectKey>
+  		insert into abl_board (bno,title,content,writer,btype,expireDate)
+  		values (#{bno},#{title},#{content},#{writer},#{btype},#{expireDate})
+  		
+  	</insert>
+  	
+  	<select id="getTotal" resultType="int">
+  		select count(*) from abl_board 
+  		where bno > 0
+  	</select>
+  	
+  	
+  	<select id="landScam" resultType="com.sample.vo.BoardVO">
+  		<![CDATA[
+  			select bno,title,writer,regDate,btype
+  			from(
+  				select /*+INDEX_DESC(abl_board pk_board) */
+  					rownum rn,bno,title,writer,regDate,btype
+  				from
+  					abl_board
+  				where rownum <= #{pageNum} * #{amount} and btype='전세사기정보'
+  				)
+  			where rn > (#{pageNum}-1) *	#{amount} 
+	
+	
+  		]]>
+  	</select>
+  	
+  	<select id="notice" resultType="com.sample.vo.BoardVO">
+  		<![CDATA[
+  			select bno,title,writer,regDate,btype
+  			from(
+  				select /*+INDEX_DESC(abl_board pk_board) */
+  					rownum rn,bno,title,writer,regDate,btype
+  				from
+  					abl_board
+  				where rownum <= #{pageNum} * #{amount} and btype='공지사항'
+  				)
+  			where rn > (#{pageNum}-1) *	#{amount} 
+	
+	
+  		]]>
+  	</select>
+  	
+  	<select id="businessAccident" resultType="com.sample.vo.BoardVO">
+  		<![CDATA[
+  			select bno,title,writer,regDate,btype
+  			from(
+  				select /*+INDEX_DESC(abl_board pk_board) */
+  					rownum rn,bno,title,writer,regDate,btype
+  				from
+  					abl_board
+  				where rownum <= #{pageNum} * #{amount} and btype='거래피해사례'
+  				)
+  			where rn > (#{pageNum}-1) *	#{amount} 
+	
+	
+  		]]>
+  	</select>
+  	
+  	
+  	
+  	<select id="adminList" resultType="com.sample.vo.BoardVO">
+  		<![CDATA[
+  			select bno,title,writer,regDate,btype
+  			from(
+  				select /*+INDEX_DESC(abl_board pk_board) */
+  					rownum rn,bno,title,writer,regDate,btype
+  				from
+  					abl_board
+  				where rownum <= #{pageNum} * #{amount}
+  				)
+  			where rn > (#{pageNum}-1) *	#{amount}
+	
+  		]]>
+  	</select>
+  </mapper>
