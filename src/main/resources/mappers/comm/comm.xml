@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="comm">
+	<resultMap id="comResultMap" type="com.land.vo.comm.CommVo">
+		<result property="bjdCode" column="BJD_CODE" /> 
+		<result property="bjdSggCode" column="BJD_SGG_CODE" /> 
+		<result property="bjdUmdCode" column="BJD_UMD_CODE" /> 
+		<result property="bjdName" column="BJD_NAME" /> 
+		<result property="useYn" column="USE_YN" /> 
+		<result property="modUser" column="MOD_USER" /> 
+		<result property="modDate" column="MOD_DATE" /> 
+	</resultMap>
+	
+	<select id="getBjdCdList" parameterType="com.land.vo.comm.CommVo" resultMap="comResultMap">
+		SELECT BJD_CODE,
+		       BJD_SGG_CODE,
+		       BJD_UMD_CODE,
+		       CASE WHEN #{searchLevel} = '3' THEN TRIM(SUBSTR(BJD_NAME,  (SELECT LENGTH(TRIM(BJD_NAME))+1 
+		       																 FROM TB_CM_M_BJDCD
+                 															WHERE BJD_CODE = SUBSTR(A.BJD_CODE, 1, 5) || '00000')
+                 											    , LENGTH(TRIM(BJD_NAME)))) 
+		            ELSE BJD_NAME END AS BJD_NAME,
+		       USE_YN,
+		       MOD_USER,
+		       TO_CHAR(MOD_DATE, 'YYYY-MM-DD HH24:MI:SS') MOD_DATE
+		  FROM TB_CM_M_BJDCD A
+		  WHERE USE_YN = '1'
+		    <if test='searchLevel == "1"'> <!-- 시 -->
+				AND BJD_CODE = SUBSTR(BJD_CODE,1,2) || '00000000'
+			</if>
+		   <if test='searchLevel == "2"'> <!-- 시군구 -->
+		        AND BJD_CODE != SUBSTR(BJD_CODE,1,2) || '00000000'
+				AND BJD_CODE = SUBSTR(BJD_CODE,1,5) || '00000'
+				<!-- 1level 조건  -->
+				AND SUBSTR(BJD_CODE,1,2) LIKE #{searchCd} || '%'
+			</if>
+			<if test='searchLevel == "3"'> <!-- 읍면동 -->
+			    AND BJD_CODE != SUBSTR(BJD_CODE,1,5) || '00000'
+				AND BJD_CODE = SUBSTR(BJD_CODE,1,8) || '00'
+				AND BJD_UMD_CODE != '00000'
+				AND SUBSTR(BJD_CODE,1,5) LIKE #{searchCd} || '%'
+			</if>
+		  ORDER BY BJD_CODE
+	</select>
+	<!-- 배치작업 - 지역코드 대상 리스트  -->
+	<select id="getBjdSggList" resultType="com.land.vo.comm.CommVo">
+		SELECT  BJD_SGG_CODE
+		  FROM TB_CM_M_BJDCD
+		 WHERE BJD_SGG_CODE != '00000' 
+		   AND BJD_UMD_CODE = '00000'
+		   AND USE_YN = '1'
+		   ORDER BY BJD_SGG_CODE
+	</select>
+	<!-- 배치작업 - 기존배치실행확인  -->
+	<select id="getBatWk" parameterType="com.land.vo.prices.PrBatVo" resultType="com.land.vo.prices.PrBatVo">
+		SELECT BAT_YM,
+		       WK_GBN,
+		       MAX(AREA_CODE) 		AREA_CODE,
+		       CONTRACT_YM,
+		       MAX(RESULT_CD)		RESULT_CD,
+		       MAX(RESULT_MSG)		RESULT_MSG,
+		       MAX(NUM_OF_ROWS) 	NUM_OF_ROWS,
+		       MAX(PAGE_NO) 		PAGE_NO,
+		       SUM(WK_CNT) 			WK_CNT,
+		       SUM(TOT_CNT) 		TOT_CNT
+		  FROM TB_CM_M_PR_BAT 
+		 WHERE BAT_YM 		= #{batYm}
+		   AND WK_GBN 		= #{wkGbn}
+		   AND CONTRACT_YM = #{contractYm}
+		   <if test='areaCode != null'>
+		   AND AREA_CODE 	= #{areaCode}
+		   GROUP BY BAT_YM, WK_GBN, AREA_CODE, CONTRACT_YM
+		   </if>
+		   <if test='areaCode == null'>
+		   GROUP BY BAT_YM, WK_GBN, CONTRACT_YM
+		   </if>
+	</select>
+	<!-- 배치작업등록 -->
+	<insert id="regBatWkHis" parameterType="com.land.vo.prices.PrBatVo">
+	    MERGE INTO TB_CM_M_PR_BAT        -- 사용할 테이블
+		USING DUAL              -- 비교 테이블(테이블 하나만 사용할 경우 DUAL)
+		ON (
+				BAT_YM 		= #{batYm}
+		   AND WK_GBN 		= #{wkGbn}
+		   AND AREA_CODE 	= #{areaCode}
+		   AND CONTRACT_YM = #{contractYm}
+		   )
+		WHEN MATCHED THEN       -- (비교 조건의)데이터가 있으면
+			UPDATE SET
+				     RESULT_CD	     = #{resultCd}  
+					,RESULT_MSG      = #{resultMsg} 
+					,NUM_OF_ROWS     = #{numOfRows}
+					,PAGE_NO         = #{pageNo}    
+					,WK_CNT          = #{wkCnt}     
+					,TOT_CNT         = #{totCnt}    
+					,MOD_USER        = #{modUser}   
+			        ,MOD_DATE = SYSDATE
+		 WHEN NOT MATCHED THEN   -- (비교 조건의)데이터가 없으면
+	     INSERT  (       
+			       BAT_YM,
+			       WK_GBN,
+			       AREA_CODE,
+			       CONTRACT_YM,
+			       RESULT_CD,
+			       RESULT_MSG,
+			       NUM_OF_ROWS,
+			       PAGE_NO,
+			       WK_CNT,
+			       TOT_CNT,
+			       MOD_USER,
+			       MOD_DATE
+		       ) 
+		       VALUES
+		       (
+		       	#{batYm},
+				#{wkGbn},
+				#{areaCode},
+				#{contractYm},
+				#{resultCd},
+				#{resultMsg},
+				#{numOfRows},
+				#{pageNo},
+				#{wkCnt},
+				#{totCnt},
+				#{modUser},
+				SYSDATE
+		       )
+	</insert>
+	<!-- 기존 시세_아파트_매매이력 삭제 -->
+	<delete id="delPrAptMmHis" parameterType="com.land.vo.prices.PrBatAptMmVo"> 
+	 DELETE FROM TB_CM_H_PR_BAT_APTMM
+	     WHERE BAT_YM		= #{batYm}
+	      AND  BJD_SGG_CODE = #{bjdSggCode}
+	      AND  YYYY			= #{yyyy}
+	      AND  MM			= #{mm}
+	     <!--  AND  DD			= #{dd} 계약년월 단위로 삭제 -->
+	</delete>
+	<!-- 시세_아파트_매매이력 등록 insert id="" 라고하면 오류 -->
+	<update id="regPrAptMmHis" parameterType="com.land.vo.prices.PrBatAptMmVo">
+	INSERT INTO TB_CM_H_PR_BAT_APTMM (  SEQ, BAT_YM,
+	       TR_AMOUNT,
+	       ST_YYYY,
+	       YYYY,
+	       LOAD_NAME,
+	       LOAD_BONBUN_CODE,
+	       LOAD_BUBUN_CODE,
+	       LAOD_SGG_CODE,
+	       LOAD_SNO,
+	       LOAD_UP_CODE,
+	       LOAD_CODE,
+	       BJD_NAME,
+	       BJD_BONBUN_CODE,
+	       BJD_BUBUN_CODE,
+	       BJD_SGG_CODE,
+	       BJD_UMD_CODE,
+	       BJD_JIBUN_CODE,
+	       KAPT_NAME,
+	       MM,
+	       DD,
+	       SN,
+	       AREA_UNIT,
+	       JIBUN,
+	       AREA_CODE,
+	       FLOOR,
+	       MOD_USER,
+	       MOD_DATE )
+	  SELECT (SELECT NVL(MAX(SEQ),0)  FROM TB_CM_H_PR_BAT_APTMM) + ROWNUM
+	         , A.*  FROM (
+	<foreach collection="itemList" item="item" separator="UNION ALL"> 
+	       SELECT 
+	         #{batYm}                 	AS BAT_YM          
+			,#{item.trAmount}           AS TR_AMOUNT       
+			,#{item.stYyyy}             AS ST_YYYY         
+			,#{item.yyyy}               AS YYYY            
+			,NVL(#{item.loadName},' ')  			AS LOAD_NAME       
+			,NVl(#{item.loadBonbunCode}, ' ')     	AS LOAD_BONBUN_CODE
+			,NVl(#{item.loadBubunCode}, ' ')      	AS LOAD_BUBUN_CODE 
+			,NVl(#{item.laodSggCode}, ' ')        	AS LAOD_SGG_CODE   
+			,NVL(#{item.loadSno}, ' ')  			AS LOAD_SNO        
+			,NVL(#{item.loadUpCode},' ')  			AS LOAD_UP_CODE    
+			,NVL(#{item.loadCode},' ')           	AS LOAD_CODE       
+			,#{item.bjdName}            AS BJD_NAME        
+			,#{item.bjdBonbunCode}      AS BJD_BONBUN_CODE 
+			,#{item.bjdBubunCode}       AS BJD_BUBUN_CODE  
+			,#{item.bjdSggCode}         AS BJD_SGG_CODE    
+			,#{item.bjdUmdCode}         AS BJD_UMD_CODE    
+			,#{item.bjdJibunCode}       AS BJD_JIBUN_CODE  
+			,#{item.kaptName}           AS KAPT_NAME       
+			,#{item.mm}                 AS MM              
+			,#{item.dd}                 AS DD              
+			,#{item.sn}                 AS SN              
+			,#{item.areaUnit}           AS AREA_UNIT       
+			,#{item.jibun}              AS JIBUN           
+			,#{item.areaCode}           AS AREA_CODE       
+			,#{item.floor}              AS FLOOR           
+			,#{item.modUser}            AS MOD_USER        
+			,SYSDATE                    AS MOD_DATE        
+		  FROM DUAL        
+	    </foreach>
+	    )  A
+		</update>
+</mapper>
+ 

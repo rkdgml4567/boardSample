@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="prices">
+<resultMap id="aptResultMap" type="com.land.vo.prices.AptVo">
+   <result property="trGbn" 		column="TR_GBN" />
+	<result property="bjdCode" 		column="BJD_CODE" />
+	<result property="contractYmd" 	column="CONTRACT_YMD" />
+	<result property="kaptName" 	column="KAPT_NAME" />
+	<result property="trAmt" 		column="TR_AMT" />
+	<result property="depositAmt" 	column="DEPOSIT_AMT" />
+	<result property="rentAmt" 		column="RENT_AMT" />
+	<result property="areaUnit" 	column="AREA_UNIT" />
+	<result property="batYm" 		column="BAT_YM" />
+	<result property="modUser" 		column="MOD_USER" />
+	<result property="modDate" 		column="MOD_DATE" />
+</resultMap>
+	<select id="getAptList" parameterType="com.land.vo.prices.AptVo" resultMap="aptResultMap">
+		SELECT   TR_GBN			 /* 거래구분(1.매매/2.전세/3.월세) */
+				,BJD_CODE        /* 법정동코드  */             
+				,CONTRACT_YMD    /* 계약일자    */
+				,KAPT_NAME	     /* 단지명      */        
+				,TR_AMT          /* 매매거래금액(단위:만원)   */    
+				,DEPOSIT_AMT     /* 보증금(단위:만원)  */        
+				,RENT_AMT        /* 월세                  */
+				,AREA_UNIT       /* 면적                  */
+				,BAT_YM          /* 배치조회년월         */     
+				,MOD_USER        /* 수정자                 */
+				,TO_CHAR(MOD_DATE, 'YYYY-MM-DD HH24:MI:SS') AS MOD_DATE      /* 수정일시              */        
+		FROM (
+	        SELECT ROW_NUMBER() OVER (ORDER BY KAPT_NAME) NUM
+	             , A.*
+	          FROM TB_PR_M_APT A
+	          WHERE 1 = 1
+			 <if test="searchTrGbn != null">
+				AND TR_GBN = #{searchTrGbn}
+			</if>
+			  AND BJD_CODE LIKE #{searchCd} || '%'
+	        ORDER BY KAPT_NAME
+        	) 
+		WHERE NUM BETWEEN #{firstIndex} + 1 AND #{firstIndex} + #{recordCountPerPage}
+	</select>
+	<select id="getAptListTotCnt" parameterType="com.land.vo.prices.AptVo" resultType="java.lang.Integer">
+	 	SELECT COUNT(*)
+	 	  FROM TB_PR_M_APT
+		WHERE 1 = 1
+	 	<!-- <if test='searchTrGbn != null |'>
+			AND TR_GBN = #{searchTrGbn}
+		</if> -->
+			AND BJD_CODE LIKE #{searchCd} || '%'
+	</select>
+</mapper>
+ 
