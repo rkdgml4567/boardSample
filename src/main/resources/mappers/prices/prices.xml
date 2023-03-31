@@ -31,8 +31,11 @@
 	             , A.*
 	          FROM TB_PR_M_APT A
 	          WHERE 1 = 1
-			 <if test="searchTrGbn != null">
+			 <if test="searchTrGbn !=null and searchTrGbn != '' ">
 				AND TR_GBN = #{searchTrGbn}
+			</if>
+			<if test="searchNm !=null and searchNm != '' ">
+				AND KAPT_NAME LIKE #{searchNm}|| '%'
 			</if>
 			  AND BJD_CODE LIKE #{searchCd} || '%'
 	        ORDER BY KAPT_NAME
@@ -43,9 +46,12 @@
 	 	SELECT COUNT(*)
 	 	  FROM TB_PR_M_APT
 		WHERE 1 = 1
-	 	<!-- <if test='searchTrGbn != null |'>
+	 	<if test="searchTrGbn !=null and searchTrGbn != '' ">
 			AND TR_GBN = #{searchTrGbn}
-		</if> -->
+		</if> 
+		<if test="searchNm !=null and searchNm != '' ">
+			AND KAPT_NAME LIKE #{searchNm}|| '%'
+		</if>
 			AND BJD_CODE LIKE #{searchCd} || '%'
 	</select>
 </mapper>

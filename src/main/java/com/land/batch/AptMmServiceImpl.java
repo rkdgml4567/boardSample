@@ -22,16 +22,20 @@ public class AptMmServiceImpl implements AptMmService {
   
   public void saveAptMm() throws Exception {
     System.out.println("==========TB_CM_H_PR_BAT_APTMM START ==================");
+    
     List<CommVo> bjdSggList = this.commDao.getBjdSggList();
     String url = "http://openapi.molit.go.kr/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcAptTradeDev";
     String contractYm = "202212";
     String batYm = "202303";
+    
     int result_row = 0;
+    
     PrBatVo batWkIn = new PrBatVo();
     batWkIn.setBatYm(batYm);
     batWkIn.setContractYm(contractYm);
     batWkIn.setWkGbn("11");
     PrBatVo batAllWkVo = this.commDao.getBatWk(batWkIn);
+    
     if (batAllWkVo != null && batAllWkVo.getAreaCode().equals("99999")) {
       System.out.println("========================");
       System.out.println("====== : " + batYm + " | " + contractYm);
@@ -43,6 +47,7 @@ public class AptMmServiceImpl implements AptMmService {
         String areaCd = ((CommVo)bjdSggList.get(i)).getBjdSggCode();
         batWkIn.setAreaCode(areaCd);
         PrBatVo batWkVo = this.commDao.getBatWk(batWkIn);
+        
         if (batWkVo == null || batWkVo.getTotCnt() <= 0 || batWkVo.getTotCnt() != batWkVo.getWkCnt()) {
           PrBatAptMmVo delVo = new PrBatAptMmVo();
           delVo.setBatYm(batYm);
@@ -61,8 +66,12 @@ public class AptMmServiceImpl implements AptMmService {
           batWkIn.setModUser("START");
           result_row = this.commDao.regBatWkHis(batWkIn);
           System.out.println(": result_row=" + result_row);
+          
           if (result_row == 0)
-            throw new Exception(String.valueOf(batWkIn.toString()) + "\n====== Exception End ========"); 
+          {
+            throw new Exception(String.valueOf(batWkIn.toString()) + "\n====== Exception End ========");
+          }
+          
           HashMap<String, Object> map = getXmlConObj.ParseXml(url, contractYm, pageNo, areaCd);
           System.out.println("map : Integer.parseInt(map.get(\"totCnt\").toString())=" + Integer.parseInt(map.get("totCnt").toString()));
           if (Integer.parseInt(map.get("totCnt").toString()) > 0) {
@@ -81,15 +90,21 @@ public class AptMmServiceImpl implements AptMmService {
             batWkIn.setPageNo(Integer.parseInt(map.get("pageNo").toString()));
             batWkIn.setModUser("UDT");
             result_row = this.commDao.regBatWkHis(batWkIn);
+            
             if (result_row == 0)
-              throw new Exception(String.valueOf(batWkIn.toString()) + "\n====== Exception End pageNo : 1 ========"); 
+            {
+              throw new Exception(String.valueOf(batWkIn.toString()) + "\n====== Exception End pageNo : 1 ========");
+            }
+            
             System.out.println(">>>>>>> SUB Commit (sgg) page : 1");
           } 
           int totPage = Integer.parseInt(map.get("totPage").toString());
           for (int j = 2; j <= totPage; j++) {
             HashMap<String, Object> mapNext = getXmlConObj.ParseXml(url, contractYm, j, areaCd);
+            
             List<PrBatAptMmVo> itemList2 = new ArrayList<>();
             itemList2 = (List<PrBatAptMmVo>)mapNext.get("itemList");
+            
             PrBatAptMmVo regPrVo2 = new PrBatAptMmVo();
             regPrVo2.setBatYm(batYm);
             regPrVo2.setItemList(itemList2);

@@ -23,9 +23,9 @@
 				</ul>
 				<div id="sns">
 					<ul>
-						<li><a href="#"><img src="/land/resources/images/sns-1.png"></a></li>
-						<li><a href="#"><img src="/land/resources/images/sns-2.png"></a></li>
-						<li><a href="#"><img src="/land/resources/images/sns-3.png"></a></li>
+						<li><a href="#"><img src="/resources/images/sns-1.png"></a></li>
+						<li><a href="#"><img src="/resources/images/sns-2.png"></a></li>
+						<li><a href="#"><img src="/resources/images/sns-3.png"></a></li>
 					</ul>
 				</div>
 			</div>

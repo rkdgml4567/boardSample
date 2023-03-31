@@ -15,7 +15,7 @@
 		<!-- Header START -->
 		<header>
 			<div id="logo">
-				<a href="/land">
+				<a href="/">
 					<h1>부동산종합정보</h1>
 				</a>
 			</div>
@@ -23,8 +23,8 @@
 				<ul id="topMenu">
 					<li><a href="#">시세 <span>▼</span></a>
 						<ul>
-							<li><a href="/land/prices/apt">아파트</a></li>
-							<li><a href="/land/prices/effApt">오피스텔</a></li>
+							<li><a href="/prices/apt">아파트</a></li>
+							<li><a href="/prices/effApt">오피스텔</a></li>
 						</ul></li>
 					<li><a href="#">정보 <span>▼</span></a>
 						<ul>

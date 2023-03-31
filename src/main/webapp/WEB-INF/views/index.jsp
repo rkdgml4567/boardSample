@@ -7,12 +7,12 @@
 <head>
 <title>부동산종합정보</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<link rel="stylesheet" href="/land/resources/css/common.css">
+<link rel="stylesheet" href="/resources/css/common.css">
 </head>
 <body>
 	<!-- Body container START -->
 	<div id="container"
-		style="background: url('/land/resources/images/main.jpg');">
+		style="background: url('/resources/images/main.jpg');">
 		<!-- Header START -->
 		<header>
 			<header id="header" >

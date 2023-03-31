@@ -1,0 +1,100 @@
+/*------------------------
+* 공통_M_시세_배치
+*-------------------------
+*/
+DROP TABLE TB_CM_M_PR_BAT;
+ CREATE TABLE TB_CM_M_PR_BAT 
+(
+    BAT_YM          VARCHAR(6  ) NOT NULL,
+    WK_GBN					VARCHAR(2 ) NOT NULL,
+    AREA_CODE       VARCHAR(5 )  NOT NULL,
+    CONTRACT_YM    VARCHAR(6  ) NOT NULL,
+    RESULT_CD       VARCHAR(2  ) ,
+    RESULT_MSG      VARCHAR(50 ) ,
+    NUM_OF_ROWS     VARCHAR(4  ) ,
+    PAGE_NO         NUMBER(4),
+    WK_CNT         NUMBER(4),
+    TOT_CNT         NUMBER(4),
+    MOD_USER	    VARCHAR(10) NOT NULL ,
+    MOD_DATE	    DATE DEFAULT     SYSDATE ,
+    CONSTRAINT  TB_CM_M_PR_BAT PRIMARY KEY (BAT_YM,WK_GBN,AREA_CODE, CONTRACT_YM) 
+);
+COMMENT ON TABLE TB_CM_M_PR_BAT      IS '공통_M_시세_배치';
+COMMENT ON COLUMN TB_CM_M_PR_BAT.BAT_YM         IS '조회년월'					 ;  
+COMMENT ON COLUMN TB_CM_M_PR_BAT.WK_GBN         IS '작업구분(11:아파트매매,12:아파트전월세,21:오피스텔매매,22:오피스텔전월세)'     ;  
+COMMENT ON COLUMN TB_CM_M_PR_BAT.AREA_CODE      IS '지역코드(법정동시군구)'          ;  
+COMMENT ON COLUMN TB_CM_M_PR_BAT.CONTRACT_YM    IS '계약년월'              ;   
+COMMENT ON COLUMN TB_CM_M_PR_BAT.RESULT_CD      IS '결과코드'           ;   
+COMMENT ON COLUMN TB_CM_M_PR_BAT.RESULT_MSG     IS '결과메세지' ;   
+COMMENT ON COLUMN TB_CM_M_PR_BAT.NUM_OF_ROWS    IS '조회단위수' ;   
+COMMENT ON COLUMN TB_CM_M_PR_BAT.PAGE_NO        IS '현재페이지번호'    ;   
+COMMENT ON COLUMN TB_CM_M_PR_BAT.WK_CNT         IS '작업건수'   ;  
+COMMENT ON COLUMN TB_CM_M_PR_BAT.TOT_CNT        IS '총건수'   ;  
+COMMENT ON COLUMN TB_CM_M_PR_BAT.MOD_USER       IS '수정자'         ;  
+COMMENT ON COLUMN TB_CM_M_PR_BAT.MOD_DATE        IS '수정일시'           ;    
+/*------------------------
+* 공통_H_시세_배치_아파트_매매
+*-------------------------
+*/
+drop table TB_CM_H_PR_BAT_APTMM ;
+ CREATE TABLE TB_CM_H_PR_BAT_APTMM 
+(
+BAT_YM              VARCHAR(6  ) NOT NULL,
+BJD_SGG_CODE        VARCHAR(5  ) NOT NULL,
+BJD_UMD_CODE        VARCHAR(5  ) NOT NULL,
+YYYY                VARCHAR(4  ) NOT NULL,
+MM                  VARCHAR(2  ) NOT NULL,
+DD                  VARCHAR(6  ) NOT NULL, 
+SEQ                 NUMBER(10)   NOT NULL,
+TR_AMOUNT           VARCHAR(40 ) NOT NULL,
+ST_YYYY             VARCHAR(4  ) NOT NULL,
+LOAD_NAME           VARCHAR(40 ) NOT NULL,
+LOAD_BONBUN_CODE    VARCHAR(5  ) NOT NULL,
+LOAD_BUBUN_CODE     VARCHAR(5  ) NOT NULL,
+LAOD_SGG_CODE       VARCHAR(5  ) NOT NULL,
+LOAD_SNO            VARCHAR(2  ) NOT NULL,
+LOAD_UP_CODE        VARCHAR(1  ) NOT NULL,
+LOAD_CODE           VARCHAR(7  ) NOT NULL,
+BJD_NAME            VARCHAR(40 ) NOT NULL,
+BJD_BONBUN_CODE     VARCHAR(4  ) NOT NULL,
+BJD_BUBUN_CODE      VARCHAR(4  ) NOT NULL,
+BJD_JIBUN_CODE      VARCHAR(1  ) NOT NULL,
+KAPT_NAME           VARCHAR(50 ) NOT NULL,
+SN                  VARCHAR(14 ) NOT NULL,
+AREA_UNIT           NUMBER(10,2) NOT NULL,
+JIBUN               VARCHAR(10 ) NOT NULL,
+AREA_CODE           VARCHAR(5  ) NOT NULL,
+FLOOR               VARCHAR(4  ) NOT NULL,
+MOD_USER	VARCHAR(10) NOT NULL ,
+MOD_DATE	DATE DEFAULT     SYSDATE ,
+CONSTRAINT  PK_TB_CM_H_PR_BAT_APTMM PRIMARY KEY (BAT_YM, BJD_SGG_CODE, BJD_UMD_CODE, YYYY, MM, DD, SEQ) 
+);
+COMMENT ON TABLE TB_CM_H_PR_BAT_APTMM      IS '공통_H_시세_배치_아파트_매매';
+COMMENT ON COLUMN TB_CM_H_PR_BAT_APTMM.BAT_YM             IS '조회년월'					 ;
+COMMENT ON COLUMN TB_CM_H_PR_BAT_APTMM.TR_AMOUNT          IS '거래금액(만원)'     ;
+COMMENT ON COLUMN TB_CM_H_PR_BAT_APTMM.ST_YYYY            IS '건축년도'          ;
+COMMENT ON COLUMN TB_CM_H_PR_BAT_APTMM.YYYY               IS '년'              ;
+COMMENT ON COLUMN TB_CM_H_PR_BAT_APTMM.LOAD_NAME          IS '도로명'           ;
+COMMENT ON COLUMN TB_CM_H_PR_BAT_APTMM.LOAD_BONBUN_CODE   IS '도로명건물본번호코드' ;
+COMMENT ON COLUMN TB_CM_H_PR_BAT_APTMM.LOAD_BUBUN_CODE    IS '도로명건물부번호코드' ;
+COMMENT ON COLUMN TB_CM_H_PR_BAT_APTMM.LAOD_SGG_CODE      IS '도로명시군구코드'    ;
+COMMENT ON COLUMN TB_CM_H_PR_BAT_APTMM.LOAD_SNO           IS '도로명일련번호코드'   ;
+COMMENT ON COLUMN TB_CM_H_PR_BAT_APTMM.LOAD_UP_CODE       IS '도로명지상지하코드'   ;
+COMMENT ON COLUMN TB_CM_H_PR_BAT_APTMM.LOAD_CODE          IS '도로명코드'         ;
+COMMENT ON COLUMN TB_CM_H_PR_BAT_APTMM.BJD_NAME           IS '법정동'           ;
+COMMENT ON COLUMN TB_CM_H_PR_BAT_APTMM.BJD_BONBUN_CODE    IS '법정동본번코드'      ;
+COMMENT ON COLUMN TB_CM_H_PR_BAT_APTMM.BJD_BUBUN_CODE     IS '법정동부번코드'      ;
+COMMENT ON COLUMN TB_CM_H_PR_BAT_APTMM.BJD_SGG_CODE       IS '법정동시군구코드'    ;
+COMMENT ON COLUMN TB_CM_H_PR_BAT_APTMM.BJD_UMD_CODE       IS '법정동읍면동코드'    ;
+COMMENT ON COLUMN TB_CM_H_PR_BAT_APTMM.BJD_JIBUN_CODE     IS '법정동지번코드'      ;
+COMMENT ON COLUMN TB_CM_H_PR_BAT_APTMM.KAPT_NAME           IS '아파트'           ;
+COMMENT ON COLUMN TB_CM_H_PR_BAT_APTMM.MM                 IS '월'              ;
+COMMENT ON COLUMN TB_CM_H_PR_BAT_APTMM.DD                 IS '일'              ;    
+COMMENT ON COLUMN TB_CM_H_PR_BAT_APTMM.SEQ                IS '시퀀스'              ;
+COMMENT ON COLUMN TB_CM_H_PR_BAT_APTMM.SN                 IS '일련번호'          ;
+COMMENT ON COLUMN TB_CM_H_PR_BAT_APTMM.AREA_UNIT          IS '전용면적'          ;
+COMMENT ON COLUMN TB_CM_H_PR_BAT_APTMM.JIBUN              IS '지번'             ;
+COMMENT ON COLUMN TB_CM_H_PR_BAT_APTMM.AREA_CODE          IS '지역코드'          ;
+COMMENT ON COLUMN TB_CM_H_PR_BAT_APTMM.FLOOR              IS '층'              ;
+COMMENT ON COLUMN TB_CM_H_PR_BAT_APTMM.MOD_USER						IS '수정자'           ;
+COMMENT ON COLUMN TB_CM_H_PR_BAT_APTMM.MOD_DATE						IS '수정일시'          ;

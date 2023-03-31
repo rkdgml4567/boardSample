@@ -17,10 +17,10 @@ import com.sample.vo.SampleVO;
 
 import lombok.AllArgsConstructor;
 import lombok.Setter;
-import lombok.extern.log4j.Log4j;
+import lombok.extern.log4j.Log4j2;
 
 @Controller
-@Log4j
+@Log4j2 
 @RequestMapping("/board/*")
 @AllArgsConstructor
 public class BoardController {

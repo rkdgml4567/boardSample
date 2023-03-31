@@ -75,8 +75,8 @@
 		   GROUP BY BAT_YM, WK_GBN, CONTRACT_YM
 		   </if>
 	</select>
-	<!-- 배치작업등록 -->
-	<insert id="regBatWkHis" parameterType="com.land.vo.prices.PrBatVo">
+	<!-- 배치작업등록  insert 사용시 허용되지 않는 작업 err -->
+	<update id="regBatWkHis" parameterType="com.land.vo.prices.PrBatVo">
 	    MERGE INTO TB_CM_M_PR_BAT        -- 사용할 테이블
 		USING DUAL              -- 비교 테이블(테이블 하나만 사용할 경우 DUAL)
 		ON (
@@ -125,7 +125,7 @@
 				#{modUser},
 				SYSDATE
 		       )
-	</insert>
+	</update>
 	<!-- 기존 시세_아파트_매매이력 삭제 -->
 	<delete id="delPrAptMmHis" parameterType="com.land.vo.prices.PrBatAptMmVo"> 
 	 DELETE FROM TB_CM_H_PR_BAT_APTMM

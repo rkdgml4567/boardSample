@@ -23,6 +23,7 @@
 		</property>
 	</bean>
 	<mybatis-spring:scan base-package="com.sample.mapper"/>
+
 	<!-- DB connect -->
 	 <bean name="dataSource"  class="org.springframework.jdbc.datasource.DriverManagerDataSource"> 
 	 <!--<beans:bean name="dataSource"  class="org.apache.tomcat.jdbc.pool.DataSource"> -->

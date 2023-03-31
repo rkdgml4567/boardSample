@@ -1,24 +1,27 @@
 package com.land.controller.prices;
 
+
 import com.land.service.comm.CommService;
 import com.land.service.prices.AptService;
 import com.land.vo.comm.CommVo;
 import com.land.vo.prices.AptVo;
+
+
 import java.io.IOException;
 import java.util.Map;
 import javax.inject.Inject;
 import org.egovframe.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
-
+@Log4j2
 @Controller
 public class AptController {
-  private static final Logger logger = LoggerFactory.getLogger(AptController.class);
+  //private static final Logger logger = LoggerFactory.getLogger(AptController.class);
   
   @Inject
   AptService aptService;
@@ -26,10 +29,12 @@ public class AptController {
   @Inject
   CommService commService;
   
-  @RequestMapping({"/prices/apt"})
+  @RequestMapping("/prices/apt")
   public String apt(@ModelAttribute("searchVO") AptVo inVo, ModelMap model) throws IOException {
+	
     CommVo inLel = new CommVo();
     inLel.setSearchLevel("1");
+    
     Map<String, Object> codeMap1 = this.commService.getBjdCdList(inLel);
     if (inVo.getSearchCd() != null && !inVo.getSearchCd().isEmpty()) {
       inLel.setSearchCd(inVo.getSearchCd());
@@ -58,8 +63,11 @@ public class AptController {
     inVo.setLastIndex(paginationInfo.getLastRecordIndex());
     inVo.setRecordCountPerPage(paginationInfo.getRecordCountPerPage());
     inVo.setSearchCd("11");
+    
     Map<String, Object> map = this.aptService.getAptPrList(inVo);
+    
     int totCnt = Integer.parseInt((String)map.get("cnt"));
+    
     paginationInfo.setTotalRecordCount(totCnt);
     model.addAttribute("codeList1", codeMap1.get("list"));
     model.addAttribute("codeList2", codeMap2.get("list"));
@@ -67,6 +75,9 @@ public class AptController {
     model.addAttribute("resultList", map.get("list"));
     model.addAttribute("resultCnt", map.get("cnt"));
     model.addAttribute("paginationInfo", paginationInfo);
+    
+    log.info("========page return; /prices/apt");
+    
     return "prices/apt";
   }
   

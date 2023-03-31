@@ -384,13 +384,13 @@ input[type="checkbox"] { vertical-align:middle; margin:0 5px 0 0; }
 .pagination ul { display:inline-block; }
 .pagination ul li {display:inline-block; margin:0 2px;  }
 .pagination ul li a { display:block; color:#999; width:26px; height:26px; line-height:26px; border:1px solid #e0e0e0; }
-.pagination ul li.first a { background:url('/land/resources/images/paging/pagination_first.gif') 8px 9px no-repeat; text-indent:-10000em; }
-.pagination ul li.prev a { background:url('/land/resources/images/paging/pagination_prev.gif') 8px 9px	 no-repeat; text-indent:-10000em; }
-.pagination ul li.next a { background:url('/land/resources/images/paging/pagination_next.gif') 12px 9px no-repeat; text-indent:-10000em; }
-.pagination ul li.last a { background:url('/land/resources/images/paging/pagination_last.gif') 10px 9px no-repeat; text-indent:-10000em; }
-.pagination ul li.first a:hover { background:url('/land/resources/images/paging/pagination_first_on.gif') no-repeat; }
-.pagination ul li.prev a:hover { background:url('/land/resources/images/paging/pagination_prev_on.gif') no-repeat; }
-.pagination ul li.next a:hover { background:url('/land/resources/images/paging/pagination_next_on.gif/') no-repeat; }
+.pagination ul li.first a { background:url('/resources/images/paging/pagination_first.gif') 8px 9px no-repeat; text-indent:-10000em; }
+.pagination ul li.prev a { background:url('/resources/images/paging/pagination_prev.gif') 8px 9px	 no-repeat; text-indent:-10000em; }
+.pagination ul li.next a { background:url('/resources/images/paging/pagination_next.gif') 12px 9px no-repeat; text-indent:-10000em; }
+.pagination ul li.last a { background:url('/resources/images/paging/pagination_last.gif') 10px 9px no-repeat; text-indent:-10000em; }
+.pagination ul li.first a:hover { background:url('/resources/images/paging/pagination_first_on.gif') no-repeat; }
+.pagination ul li.prev a:hover { background:url('/resources/images/paging/pagination_prev_on.gif') no-repeat; }
+.pagination ul li.next a:hover { background:url('/resources/images/paging/pagination_next_on.gif/') no-repeat; }
 .pagination ul li.current a,
 .pagination ul li a:hover { border:none; color:#fff; font-size:16px; font-weight:600; width:28px; height:28px; line-height:28px; background:#4688d2; }
 

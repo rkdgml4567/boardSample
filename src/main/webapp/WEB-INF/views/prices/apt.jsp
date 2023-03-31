@@ -43,31 +43,36 @@
 	 * 상세회면 처리 함수
 	 ******************************************************** */
 	function fn_code_search(lev) {
-		alert(1);
-		//$(".bjdUmd").get(current).options.length = 1;
+		$( '#bjdUmd' ).empty();
+	   // $( '#bjdUmd' ).append( '<option>전체</option>' );
+	    
+	    var sggCd =  $('#bjdSgg').val();
+	    
 		$.ajax({
 			url :"<c:url value='/prices/selectBjdCodeList'/>"
 	        ,type: "POST"
-	        ,data : {"searchLevel":lev, "searchCd":"11130"}
+	        ,data : {"searchLevel":lev, "searchCd":sggCd}
 	        ,dataType: 'json'  	   
 	        ,success : function(data){
-	        	var length = data['codeList'].length;
-	        	if(length > 0) {
-	        		$.each(data['codeList'], function(i) {
-	        	          innerHtml += '<option value='+data['codeList'][i].bjdCode+'>'+data['codeList'][i].bjdCode+'</option>';  
-	        		});
-	  
-	        		$("#bjdUmd").html(innerHtml);
+	        	var codeList = data['codeList'];
+	        	var length   = codeList['list'].length;
 	        	
-	        		//$("#target").click(); //댓글표시
+	        	console.log('data', data);
+	        	console.log('length',  length);
+	        	
+	        	if(length > 0) {
+	        		$.each(codeList['list'], function(i) {
+	        			 $( '#bjdUmd' ).append( '<option value='+codeList['list'][i].bjdCode+'>' + codeList['list'][i].bjdName + '</option>' );  
+	        		});
 	        	}
 			}
 		    ,error: function(){
 		    	//error
-		    	alert(2);
+		    	$( '#bjdUmd' ).append( '<option>전체</option>' );
+		    	console.log('error', data);
 		    }
-	});
-		alert(3);
+		});
+		
 	}
 </script>
 </head>
@@ -100,16 +105,17 @@
 								<li>
 									<div style="width: 480px">
 										<!--시군구 -->
-										<select onChange="fn_code_search('3')">
+										<select id="bjdSgg" onChange="fn_code_search('3')">
+										
 										<c:forEach items="${codeList2}" var="code2" varStatus="status"  >
-											<option value="<c:out value='${code2.bjdCode}' />"
+											<option value="<c:out value='${code2.bjdSggCode}' />"
 												<c:if test="${searchVO.searchCd == code2.bjdCode}">selected="selected"</c:if>><c:out value='${code2.bjdName}' /></option>
 										</c:forEach>
 										</select>
 										
 										<!--읍면동 -->
 										<select id="bjdUmd">
-											<c:forEach items="${codeList3}" var="code3" varStatus="status">
+										<c:forEach items="${codeList3}" var="code3" varStatus="status">
 											<option value="<c:out value='${code3.bjdCode}' />"
 												<c:if test="${searchVO.searchCd == code3.bjdCode}">selected="selected"</c:if>><c:out value='${code3.bjdName}' /></option>
 										</c:forEach>

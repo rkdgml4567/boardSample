@@ -76,7 +76,7 @@
 		   </if>
 	</select>
 	<!-- 배치작업등록 -->
-	<insert id="regBatWkHis" parameterType="com.land.vo.prices.PrBatVo">
+	<update id="regBatWkHis" parameterType="com.land.vo.prices.PrBatVo">
 	    MERGE INTO TB_CM_M_PR_BAT        -- 사용할 테이블
 		USING DUAL              -- 비교 테이블(테이블 하나만 사용할 경우 DUAL)
 		ON (
@@ -125,7 +125,7 @@
 				#{modUser},
 				SYSDATE
 		       )
-	</insert>
+	</update>
 	<!-- 기존 시세_아파트_매매이력 삭제 -->
 	<delete id="delPrAptMmHis" parameterType="com.land.vo.prices.PrBatAptMmVo"> 
 	 DELETE FROM TB_CM_H_PR_BAT_APTMM
@@ -170,7 +170,7 @@
 	       SELECT 
 	         #{batYm}                 	AS BAT_YM          
 			,#{item.trAmount}           AS TR_AMOUNT       
-			,#{item.stYyyy}             AS ST_YYYY         
+			,NVL(#{item.stYyyy},'0000') AS ST_YYYY         
 			,#{item.yyyy}               AS YYYY            
 			,NVL(#{item.loadName},' ')  			AS LOAD_NAME       
 			,NVl(#{item.loadBonbunCode}, ' ')     	AS LOAD_BONBUN_CODE
