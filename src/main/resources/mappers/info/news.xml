@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="news"> <!-- Repository와 연동을 위해 사용될 namespace -->
+	<select id="getList" resultType="com.land.vo.info.NewsVo"> <!-- 조회된 값을 Cart클래스에 담아 return -->
+		<![CDATA[
+			select *
+			from tbl_news
+			where rownum <= 5
+		]]>
+	</select>
+	
+	<select id="getAdditionalList" resultType="com.land.vo.info.NewsVo" parameterType="Integer"> <!-- 조회된 값을 Cart클래스에 담아 return -->
+		<![CDATA[
+			select * from
+			(
+				select rownum as rn, tbl_news.*
+				from tbl_news
+				where rownum <= (5 * #{page})
+			)
+			where rn > (5 * (#{page}-1))
+			
+		]]>
+	</select>
+
+	<insert id="insertList" parameterType="java.util.List">
+
+		INSERT ALL
+
+		<foreach collection="list" item="item" index="index" open=""
+			separator=" " close="SELECT * FROM DUAL">
+
+			INTO tbl_news
+			(title, content, writer, href, img, regdate)
+			VALUES (
+			#{item.title},
+			#{item.content},
+			#{item.writingSource},
+			#{item.href},
+			#{item.img},
+			#{item.date}
+			)
+
+		</foreach>
+
+	</insert>
+
+	<!-- <update id="insertList" parameterType="java.util.List">
+		<foreach collection="list" item="item" open="INSERT ALL"
+			close="SELECT * FROM DUAL" separator=" ">
+			INSERT INTO tbl_news(
+			nno, title,
+			content, writer, href, img, regdate
+			)
+			VALUES (
+			seq_news.nextval,
+			#{item.title},
+			#{item.content},
+			#{item.writingSource},
+			#{item.href},
+			#{item.img},
+			#{item.date}
+			)
+		</foreach>
+	</update> -->
+
+	<!-- <insert id="insertList" parameterType="java.util.List"> INSERT INTO 
+		tbl_news( nno, title, content, writer, href, img, regdate ) VALUES <foreach 
+		item="item" index="index" collection="list"> ( seq_news.nextval, #{item.title}, 
+		#{item.content}, #{item.writingSource}, #{item.href}, #{item.img}, #{item.date} 
+		) </foreach> </insert> -->
+</mapper>
