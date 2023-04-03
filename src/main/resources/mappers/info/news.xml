@@ -6,7 +6,7 @@
 	<select id="getList" resultType="com.land.vo.info.NewsVo"> <!-- 조회된 값을 Cart클래스에 담아 return -->
 		<![CDATA[
 			select *
-			from tbl_news
+			from TB_NW_M_NEWS
 			where rownum <= 5
 		]]>
 	</select>
@@ -15,8 +15,8 @@
 		<![CDATA[
 			select * from
 			(
-				select rownum as rn, tbl_news.*
-				from tbl_news
+				select rownum as rn, TB_NW_M_NEWS.*
+				from TB_NW_M_NEWS
 				where rownum <= (5 * #{page})
 			)
 			where rn > (5 * (#{page}-1))
@@ -31,7 +31,7 @@
 		<foreach collection="list" item="item" index="index" open=""
 			separator=" " close="SELECT * FROM DUAL">
 
-			INTO tbl_news
+			INTO TB_NW_M_NEWS
 			(title, content, writer, href, img, regdate)
 			VALUES (
 			#{item.title},
@@ -49,7 +49,7 @@
 	<!-- <update id="insertList" parameterType="java.util.List">
 		<foreach collection="list" item="item" open="INSERT ALL"
 			close="SELECT * FROM DUAL" separator=" ">
-			INSERT INTO tbl_news(
+			INSERT INTO TB_NW_M_NEWS(
 			nno, title,
 			content, writer, href, img, regdate
 			)
@@ -66,7 +66,7 @@
 	</update> -->
 
 	<!-- <insert id="insertList" parameterType="java.util.List"> INSERT INTO 
-		tbl_news( nno, title, content, writer, href, img, regdate ) VALUES <foreach 
+		TB_NW_M_NEWS( nno, title, content, writer, href, img, regdate ) VALUES <foreach 
 		item="item" index="index" collection="list"> ( seq_news.nextval, #{item.title}, 
 		#{item.content}, #{item.writingSource}, #{item.href}, #{item.img}, #{item.date} 
 		) </foreach> </insert> -->

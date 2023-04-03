@@ -44,6 +44,7 @@
 	<bean name="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
 		<constructor-arg 	index="0"		ref="sqlSessionFactory" />
 	</bean>
+	
 	<!-- For Pagination Tag -->	 
 	<bean id="imageRenderer" class="com.land.tag.ImagePaginationRenderer"/> 
 	<bean id="textRenderer" class="org.egovframe.rte.ptl.mvc.tags.ui.pagination.PaginationInfo"/>  

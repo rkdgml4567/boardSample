@@ -19,14 +19,16 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
 public class GetResult {
-  public HashMap<String, Object> ParseXml(String url, String contractYmd, int pageNo, String areaCd) {
+  public HashMap<String, Object> AptMmParseXml(String contractYmd, int pageNo, String areaCd) {
     int tCnt = 0;
-    //String ntceInfo = "";
+    String url = "http://openapi.molit.go.kr/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcAptTradeDev";
+    
     HashMap<String, Object> map = new HashMap<>();
     try {
       BufferedReader rd;
       StringBuilder urlBuilder = new StringBuilder(url);
       String numOfRows = "10";
+     
       urlBuilder.append("?" + URLEncoder.encode("serviceKey", "UTF-8") + 
           "=YJch%2FTcqdanC6AZOscVqhGOZUMztRCKE7FMs9s9XF45N4UgLL9Lib3RXt%2Bf%2FQYOAJJT6GQfLHh4iDRZh5ihdjg%3D%3D");
       urlBuilder.append("&" + URLEncoder.encode("pageNo", "UTF-8") + "=" + URLEncoder.encode(String.valueOf(pageNo), "UTF-8"));
@@ -169,7 +171,7 @@ public class GetResult {
         map.put("pageNo", Integer.valueOf(0));
         map.put("totPage", Integer.valueOf(0));
         map.put("numOfRows", Integer.valueOf(10));
-        map.put("resultCd", "999");
+        map.put("resultCd",  resultCd);
         map.put("resultMsg", "END");
       } 
       System.out.println("map=" + map.toString());

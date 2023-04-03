@@ -3,6 +3,7 @@ package com.land.dao.comm;
 import com.land.vo.comm.CommVo;
 import com.land.vo.prices.PrBatAptMmVo;
 import com.land.vo.prices.PrBatVo;
+import com.land.vo.prices.AptVo;
 import java.util.List;
 
 public interface CommDao {
@@ -17,4 +18,6 @@ public interface CommDao {
   int delPrAptMmHis(PrBatAptMmVo paramPrBatAptMmVo);
   
   int regPrAptMmHis(PrBatAptMmVo paramPrBatAptMmVo);
+  
+  int regPrAptMm(AptVo paramAptVo);
 }

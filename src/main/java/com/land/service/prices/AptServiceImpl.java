@@ -1,21 +1,14 @@
 package com.land.service.prices;
 
-import com.land.batch.AptMmService;
+
 import com.land.dao.prices.AptDao;
 import com.land.vo.prices.AptVo;
-import com.sample.mapper.BoardMapper;
-import com.sample.service.AnnouncementServiceImpl;
-
-import lombok.AllArgsConstructor;
-import lombok.extern.log4j.Log4j;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.inject.Inject;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 @Service
