@@ -1,9 +1,9 @@
-package com.sample.mapper;
+package com.land.mapper;
 
 import java.util.List;
 
-import com.sample.vo.BoardVO;
-import com.sample.vo.Criteria;
+import com.land.vo.board.BoardVO;
+import com.land.vo.board.Criteria;
 
 
 public interface BoardMapper {

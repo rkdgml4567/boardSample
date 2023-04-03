@@ -1,13 +1,13 @@
-package com.sample.service;
+package com.land.service.board;
 
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.sample.mapper.BoardMapper;
-import com.sample.vo.BoardVO;
-import com.sample.vo.Criteria;
+import com.land.mapper.BoardMapper;
+import com.land.vo.board.BoardVO;
+import com.land.vo.board.Criteria;
 
 import lombok.AllArgsConstructor;
 import lombok.Setter;
