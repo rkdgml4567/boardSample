@@ -1,9 +1,9 @@
-package com.sample.service;
+package com.land.service.board;
 
 import java.util.List;
 
-import com.sample.vo.BoardVO;
-import com.sample.vo.Criteria;
+import com.land.vo.board.BoardVO;
+import com.land.vo.board.Criteria;
 
 public interface AnnouncementService {
 	

@@ -8,10 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.sample.mapper.BoardMapper;
-import com.sample.service.AnnouncementService;
-import com.sample.vo.BoardVO;
-import com.sample.vo.Criteria;
+import com.land.mapper.BoardMapper;
+import com.land.service.board.AnnouncementService;
+import com.land.vo.board.BoardVO;
+import com.land.vo.board.Criteria;
 
 import lombok.Setter;
 import lombok.extern.log4j.Log4j;
