@@ -1,8 +1,8 @@
 package com.land.service.comm;
 
 import com.land.dao.comm.CommDao;
+import com.land.service.board.AnnouncementServiceImpl;
 import com.land.vo.comm.CommVo;
-import com.sample.service.AnnouncementServiceImpl;
 
 import lombok.extern.log4j.Log4j;
 

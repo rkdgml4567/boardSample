@@ -1,4 +1,4 @@
-package com.sample.controller;
+package com.land.controller.board;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -9,11 +9,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.sample.service.AnnouncementService;
-import com.sample.vo.BoardVO;
-import com.sample.vo.Criteria;
-import com.sample.vo.PageDTO;
-import com.sample.vo.SampleVO;
+import com.land.service.board.AnnouncementService;
+import com.land.vo.board.BoardVO;
+import com.land.vo.board.Criteria;
+import com.land.vo.board.PageDTO;
+
 
 import lombok.AllArgsConstructor;
 import lombok.Setter;
