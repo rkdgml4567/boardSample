@@ -33,9 +33,8 @@ public class AptController {
   public String apt(@ModelAttribute("searchVO") AptVo inVo, ModelMap model) throws IOException {
 	
     CommVo inLel = new CommVo();
-    inLel.setSearchLevel("1");
     
-    Map<String, Object> codeMap1 = this.commService.getBjdCdList(inLel);
+    /*Map<String, Object> codeMap1 = this.commService.getBjdCdList(inLel);
     if (inVo.getSearchCd() != null && !inVo.getSearchCd().isEmpty()) {
       inLel.setSearchCd(inVo.getSearchCd());
     } else {
@@ -46,11 +45,14 @@ public class AptController {
       inLel.setSearchCd(inVo.getSearchCd());
     } else {
       inLel.setSearchCd(codeMap1.get("firstCd").toString().substring(0, 2));
-    } 
+    } */
+    
+    inLel.setSearchLevel("2");
     Map<String, Object> codeMap2 = this.commService.getBjdCdList(inLel);
+    
     inLel.setSearchLevel("3");
     if (inVo.getSearchCd() != null && !inVo.getSearchCd().isEmpty()) {
-      inLel.setSearchCd(inVo.getSearchCd());
+      inLel.setSearchCd(inVo.getSearchCd().substring(0,5));  //법정동코드 5자리 시군구
     } else {
       inLel.setSearchCd(codeMap2.get("firstCd").toString().substring(0, 5));
     } 
@@ -62,14 +64,13 @@ public class AptController {
     inVo.setFirstIndex(paginationInfo.getFirstRecordIndex());
     inVo.setLastIndex(paginationInfo.getLastRecordIndex());
     inVo.setRecordCountPerPage(paginationInfo.getRecordCountPerPage());
-    inVo.setSearchCd("11");
     
     Map<String, Object> map = this.aptService.getAptPrList(inVo);
     
     int totCnt = Integer.parseInt((String)map.get("cnt"));
     
     paginationInfo.setTotalRecordCount(totCnt);
-    model.addAttribute("codeList1", codeMap1.get("list"));
+   // model.addAttribute("codeList1", codeMap1.get("list"));
     model.addAttribute("codeList2", codeMap2.get("list"));
     model.addAttribute("codeList3", codeMap3.get("list"));
     model.addAttribute("resultList", map.get("list"));

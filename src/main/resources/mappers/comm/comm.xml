@@ -32,7 +32,7 @@
 		        AND BJD_CODE != SUBSTR(BJD_CODE,1,2) || '00000000'
 				AND BJD_CODE = SUBSTR(BJD_CODE,1,5) || '00000'
 				<!-- 1level 조건  -->
-				AND SUBSTR(BJD_CODE,1,2) LIKE #{searchCd} || '%'
+				<!--AND BJD_CODE,1,2) LIKE #{searchCd} || '%'-->
 			</if>
 			<if test='searchLevel == "3"'> <!-- 읍면동 -->
 			    AND BJD_CODE != SUBSTR(BJD_CODE,1,5) || '00000'

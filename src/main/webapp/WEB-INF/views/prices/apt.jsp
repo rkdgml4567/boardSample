@@ -36,6 +36,9 @@
 	 * 조회 처리 함수
 	 ******************************************************** */
 	function fn_search() {
+		
+		alert($('#bjdUmd').val());
+		document.aptForm.searchCd.value = $('#bjdUmd').val();
 		document.aptForm.pageIndex.value = 1;
 		document.aptForm.submit();
 	}
@@ -109,7 +112,7 @@
 										
 										<c:forEach items="${codeList2}" var="code2" varStatus="status"  >
 											<option value="<c:out value='${code2.bjdSggCode}' />"
-												<c:if test="${searchVO.searchCd == code2.bjdCode}">selected="selected"</c:if>><c:out value='${code2.bjdName}' /></option>
+												<c:if test="${fn:substring(searchVO.searchCd,0,5) == code2.bjdSggCode}">selected="selected"</c:if>><c:out value='${code2.bjdName}' /></option>
 										</c:forEach>
 										</select>
 										
@@ -127,8 +130,7 @@
 								<li>
 									<div style="width: 540px; text-align: right;">
 										<!-- 검색키워드 및 조회버튼 -->
-										<input type="submit" class="s_btn" value="초기화" title="초기화"
-											align="right" />
+										<input type="submit" class="s_btn" value="초기화" title="초기화" align="right" />
 									</div>
 								</li>
 							</ul>
@@ -139,8 +141,7 @@
 								<li><div style="width: 480px">
 										<select name="searchTrGbn">
 											<option value=""
-												<c:if 
-											test="${searchVO.searchTrGbn == ''}">selected="selected"</c:if>>전체</option>
+												<c:if test="${searchVO.searchTrGbn == ''}">selected="selected"</c:if>>전체</option>
 											<!-- 게시판명 -->
 											<option value="1"
 												<c:if test="${searchVO.searchTrGbn == '1'}">selected="selected"</c:if>>매매</option>
@@ -157,13 +158,18 @@
 
 								<li><label>면적</label></li>
 								<li>
-								<div style="width: 420px;">
+								<div style="width: 350px;">
 									<input class="s_input" name="minUnit" type="text" size="35" title="최소면적" value='<c:out value="${searchVO.minUnit}"/>' maxlength="155"> 
 									~ 
 									<input class="s_input" name="maxUnit" type="text" size="35" title="최대면적" value='<c:out value="${searchVO.maxUnit}"/>' maxlength="155">
-									<input type="submit" class="s_btn" style="text-align:right" value="조회" title="조회" />
+									
 								</div>
+								
 								</li>
+								<li><div style="width: 60px; text-align: right;">
+								<input type="submit" class="s_btn" style="text-align:right;width:50px" value="조 회" title="조회"  onSubmit="fn_search(); return false;"/>
+								</div></li>
+						
 							</ul>
 						</div>
 					</div>

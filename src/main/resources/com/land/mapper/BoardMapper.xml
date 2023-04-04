@@ -4,9 +4,9 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
   
-  <mapper namespace="com.sample.mapper.BoardMapper">
+  <mapper namespace="com.land.mapper.BoardMapper">
   	
-  	<select id="getList" resultType="com.sample.vo.BoardVO">
+  	<select id="getList" resultType="com.land.vo.board.BoardVO">
   		<![CDATA[
   		select  * from abl_board 
   		where bno>0 
@@ -15,7 +15,7 @@
   		]]>
   	</select>
   	
-  	<select id="get" resultType="com.sample.vo.BoardVO">
+  	<select id="get" resultType="com.land.vo.board.BoardVO">
   		
   		select * from abl_board 
   		where	bno=#{bno}
@@ -38,7 +38,7 @@
   	</select>
   	
   	
-  	<select id="landScam" resultType="com.sample.vo.BoardVO">
+  	<select id="landScam" resultType="com.land.vo.board.BoardVO">
   		<![CDATA[
   			select bno,title,writer,regDate,btype
   			from(
@@ -54,7 +54,7 @@
   		]]>
   	</select>
   	
-  	<select id="notice" resultType="com.sample.vo.BoardVO">
+  	<select id="notice" resultType="com.land.vo.board.BoardVO">
   		<![CDATA[
   			select bno,title,writer,regDate,btype
   			from(
@@ -70,7 +70,7 @@
   		]]>
   	</select>
   	
-  	<select id="businessAccident" resultType="com.sample.vo.BoardVO">
+  	<select id="businessAccident" resultType="com.land.vo.board.BoardVO">
   		<![CDATA[
   			select bno,title,writer,regDate,btype
   			from(
@@ -88,7 +88,7 @@
   	
   	
   	
-  	<select id="adminList" resultType="com.sample.vo.BoardVO">
+  	<select id="adminList" resultType="com.land.vo.board.BoardVO">
   		<![CDATA[
   			select bno,title,writer,regDate,btype
   			from(
