@@ -26,8 +26,8 @@ public class Crawling {
 		ArrayList<NewsVo> list = new ArrayList<NewsVo>();
 		HashMap<String, String> hm = new HashMap<String, String>();
 		
-		// "20230327","20230328","20230329","20230330",
-		String[] newsDateArr = {"20230331","20230330"};
+		// "20230331","20230330",
+		String[] newsDateArr = {"20230404","20230403","20230402","20230401"};
 		int newsPage = 1;
 		try {
 			for(int day=0; day<newsDateArr.length; day++) {

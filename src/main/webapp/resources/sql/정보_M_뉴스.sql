@@ -1,7 +1,7 @@
-drop table tbl_news;
+drop table TB_IN_M_NEWS;
 
-create table tbl_news (
-    title varchar2(200) not null,
+create table TB_IN_M_NEWS (
+    title varchar2(300) not null,
     content varchar2(2000) not null,
     writer varchar2(50) not null,
     href varchar2(300) not null,
