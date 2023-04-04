@@ -28,4 +28,8 @@ public interface BoardMapper {
 	
 	public List<BoardVO> businessAccident(Criteria cri);
 	
+	public int landScamTotal();
+	
+	public int noticeTotal();
+	
 }

@@ -7,6 +7,10 @@
 <head>
 <title>부동산종합정보</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<script src="/resources/jquery/jquery-3.5.1.js"></script>
+<link href="/resources/css/bootstrap.css" rel="stylesheet">
+<script src="/resources/js/bootstrap.js"></script>
  <link rel="stylesheet" href="/resources/css/common.css">
 </head>
 <body>

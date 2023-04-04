@@ -31,6 +31,7 @@
 	</beans:bean>
 	<context:component-scan base-package="com.sample.*" />
 	<context:component-scan base-package="com.land.*" />
+
 <!-- Spring Quartz Start -->
     <!-- Job -->
     <!-- bean의 id인 job은 원하는 이름으로 설정 가능 -->

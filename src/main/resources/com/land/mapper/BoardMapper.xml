@@ -4,20 +4,20 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
   
-  <mapper namespace="com.sample.mapper.BoardMapper">
+  <mapper namespace="com.land.mapper.BoardMapper">
   	
-  	<select id="getList" resultType="com.sample.vo.BoardVO">
+  	<select id="getList" resultType="com.land.vo.board.BoardVO">
   		<![CDATA[
-  		select  * from abl_board 
+  		select  * from TB_BO_M_NOTICE
   		where bno>0 
   		order by bno desc
   		
   		]]>
   	</select>
   	
-  	<select id="get" resultType="com.sample.vo.BoardVO">
+  	<select id="get" resultType="com.land.vo.board.BoardVO">
   		
-  		select * from abl_board 
+  		select * from TB_BO_M_NOTICE
   		where	bno=#{bno}
   		
   		
@@ -25,27 +25,36 @@
   	
   	<insert id="register">
   		<selectKey keyProperty="bno" order="BEFORE" resultType="long">
-  			select seq_board.nextval from dual
+  			select seq_notice_board.nextval from dual
   		</selectKey>
-  		insert into abl_board (bno,title,content,writer,btype,expireDate)
+  		insert into TB_BO_M_NOTICE (bno,title,content,writer,btype,expireDate)
   		values (#{bno},#{title},#{content},#{writer},#{btype},#{expireDate})
   		
   	</insert>
   	
   	<select id="getTotal" resultType="int">
-  		select count(*) from abl_board 
+  		select count(*) from TB_BO_M_NOTICE 
   		where bno > 0
   	</select>
   	
+  	<select id="landScamTotal" resultType="int">
+  		select count(*) from TB_BO_M_NOTICE
+  		where bno>0 and btype='전세사기정보'
+  	</select>
   	
-  	<select id="landScam" resultType="com.sample.vo.BoardVO">
+  	<select id="noticeTotal" resultType="int">
+  		select count(*) from TB_BO_M_NOTICE
+  		where bno >0 and btype='공지사항'
+  	</select>
+  	
+  	<select id="landScam" resultType="com.land.vo.board.BoardVO">
   		<![CDATA[
   			select bno,title,writer,regDate,btype
   			from(
-  				select /*+INDEX_DESC(abl_board pk_board) */
+  				select /*+INDEX_DESC(TB_BO_M_NOTICE pk_notice_board) */
   					rownum rn,bno,title,writer,regDate,btype
   				from
-  					abl_board
+  					TB_BO_M_NOTICE
   				where rownum <= #{pageNum} * #{amount} and btype='전세사기정보'
   				)
   			where rn > (#{pageNum}-1) *	#{amount} 
@@ -54,14 +63,14 @@
   		]]>
   	</select>
   	
-  	<select id="notice" resultType="com.sample.vo.BoardVO">
+  	<select id="notice" resultType="com.land.vo.board.BoardVO">
   		<![CDATA[
   			select bno,title,writer,regDate,btype
   			from(
-  				select /*+INDEX_DESC(abl_board pk_board) */
+  				select /*+INDEX_DESC(TB_BO_M_NOTICE pk_notice_board) */
   					rownum rn,bno,title,writer,regDate,btype
   				from
-  					abl_board
+  					TB_BO_M_NOTICE
   				where rownum <= #{pageNum} * #{amount} and btype='공지사항'
   				)
   			where rn > (#{pageNum}-1) *	#{amount} 
@@ -70,14 +79,14 @@
   		]]>
   	</select>
   	
-  	<select id="businessAccident" resultType="com.sample.vo.BoardVO">
+  	<select id="businessAccident" resultType="com.land.vo.board.BoardVO">
   		<![CDATA[
   			select bno,title,writer,regDate,btype
   			from(
-  				select /*+INDEX_DESC(abl_board pk_board) */
+  				select /*+INDEX_DESC(TB_BO_M_NOTICE pk_notice_board) */
   					rownum rn,bno,title,writer,regDate,btype
   				from
-  					abl_board
+  					TB_BO_M_NOTICE
   				where rownum <= #{pageNum} * #{amount} and btype='거래피해사례'
   				)
   			where rn > (#{pageNum}-1) *	#{amount} 
@@ -88,14 +97,14 @@
   	
   	
   	
-  	<select id="adminList" resultType="com.sample.vo.BoardVO">
+  	<select id="adminList" resultType="com.land.vo.board.BoardVO">
   		<![CDATA[
   			select bno,title,writer,regDate,btype
   			from(
-  				select /*+INDEX_DESC(abl_board pk_board) */
+  				select /*+INDEX_DESC(TB_BO_M_NOTICE pk_notice_board) */
   					rownum rn,bno,title,writer,regDate,btype
   				from
-  					abl_board
+  					TB_BO_M_NOTICE
   				where rownum <= #{pageNum} * #{amount}
   				)
   			where rn > (#{pageNum}-1) *	#{amount}

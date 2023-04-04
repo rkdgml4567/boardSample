@@ -1,21 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@include file="/resources/jsp/header.jsp"%>
 
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<script src="/resources/jquery/jquery-3.5.1.js"></script>
-<link href="/resources/css/bootstrap.css" rel="stylesheet">
-<script src="/resources/js/bootstrap.js"></script>
-
-
-<title>게시판관리</title>
-
-</head>
 <body>
 <h1 class="text-center font-weight-bold mt-5">거래사고사례</h1>
 <div class="mx-auto text-center">

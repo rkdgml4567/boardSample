@@ -24,5 +24,9 @@ public interface AnnouncementService {
 	
 	public List<BoardVO> businessAccident(Criteria cri);
 	
+	public int landScamTotal();
+	
+	public int noticeTotal();
+	
 	
 }

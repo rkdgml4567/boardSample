@@ -1,12 +1,17 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
-
-        <link rel="stylesheet" href="resources/css/header.css">
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+ <link rel="stylesheet" href="/resources/css/common.css">
+<script src="/resources/jquery/jquery-3.5.1.js"></script>
+<link href="/resources/css/bootstrap.css" rel="stylesheet">
+<script src="/resources/js/bootstrap.js"></script>
         
         <script type="text/javascript">
         $(function() { 
@@ -61,7 +66,7 @@
                             <a href="#!">매물</a>
                         </li>
                         <li>
-                            <a href="#!">시세</a>                       
+                            <a href="!">시세</a>                       
                         </li>
                          <li>
                             <a href="#!">뉴스</a>
