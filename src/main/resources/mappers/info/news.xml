@@ -6,8 +6,8 @@
 	<select id="getList" resultType="com.land.vo.info.NewsVo"> <!-- 조회된 값을 Cart클래스에 담아 return -->
 		<![CDATA[
 			select *
-			from TB_NW_M_NEWS
-			where rownum <= 5
+			from TB_IN_M_NEWS
+			where rownum <= 10
 		]]>
 	</select>
 	
@@ -15,23 +15,23 @@
 		<![CDATA[
 			select * from
 			(
-				select rownum as rn, TB_NW_M_NEWS.*
-				from TB_NW_M_NEWS
-				where rownum <= (5 * #{page})
+				select rownum as rn, TB_IN_M_NEWS.*
+				from TB_IN_M_NEWS
+				where rownum <= (10 * #{page})
 			)
-			where rn > (5 * (#{page}-1))
+			where rn > (10 * (#{page}-1))
 			
 		]]>
 	</select>
 
-	<insert id="insertList" parameterType="java.util.List">
+	<update id="insertList" parameterType="java.util.List">
 
 		INSERT ALL
 
 		<foreach collection="list" item="item" index="index" open=""
 			separator=" " close="SELECT * FROM DUAL">
 
-			INTO TB_NW_M_NEWS
+			INTO TB_IN_M_NEWS
 			(title, content, writer, href, img, regdate)
 			VALUES (
 			#{item.title},
@@ -44,7 +44,7 @@
 
 		</foreach>
 
-	</insert>
+	</update>
 
 	<!-- <update id="insertList" parameterType="java.util.List">
 		<foreach collection="list" item="item" open="INSERT ALL"

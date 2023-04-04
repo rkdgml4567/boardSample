@@ -26,7 +26,7 @@ public class NewsController {
 	@RequestMapping(value="/list", method=RequestMethod.GET)
 	public String getNewsList(Model model) {
 		model.addAttribute("newsList", newsService.getNewsList());
-		return "info/newsList";
+		return "info/list";
 	}
 	
 	@RequestMapping(value="/init", method=RequestMethod.GET)

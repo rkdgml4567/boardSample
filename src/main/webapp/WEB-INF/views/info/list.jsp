@@ -5,7 +5,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>land news</title>
 <script src="<c:url value='/resources/js/jquery-1.12.4.min.js' />"></script>
 <link type="text/css" rel="stylesheet"
 	href="<c:url value='/resources/css/common.css' />">
@@ -44,6 +44,9 @@ hr {
 	display: flex;
 	justify-content: center;
 	margin: 48px 0;
+}
+#contents_center {
+	height: unset !important;
 }
 </style>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
