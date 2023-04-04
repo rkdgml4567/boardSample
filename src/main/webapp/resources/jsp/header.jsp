@@ -28,7 +28,7 @@
 						</ul></li>
 					<li><a href="#">정보 <span>▼</span></a>
 						<ul>
-							<li><a href="/news/list">뉴스</a></li>
+							<li><a href="/info/news/list">뉴스</a></li>
 							<li><a href="#">블로그</a></li>
 						</ul></li>
 					<li><a href="#">통계</a></li>
