@@ -3,6 +3,7 @@ package com.land.dao.comm;
 import com.land.vo.comm.CommVo;
 import com.land.vo.prices.PrBatAptMmVo;
 import com.land.vo.prices.PrBatVo;
+import com.land.vo.prices.AptVo;
 import java.util.List;
 import javax.inject.Inject;
 import org.apache.ibatis.session.SqlSession;
@@ -36,4 +37,8 @@ public class CommDaoImpl implements CommDao {
   public int regPrAptMmHis(PrBatAptMmVo itemList) {
     return this.sqlSession.insert("comm.regPrAptMmHis", itemList);
   }
+  
+  public int regPrAptMm(AptVo vo) {
+	    return this.sqlSession.update("comm.regPrAptMm", vo);
+	  }
 }

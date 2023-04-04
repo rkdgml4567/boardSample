@@ -59,7 +59,7 @@
 	        	
 	        	console.log('data', data);
 	        	console.log('length',  length);
-	        	
+	        	 
 	        	if(length > 0) {
 	        		$.each(codeList['list'], function(i) {
 	        			 $( '#bjdUmd' ).append( '<option value='+codeList['list'][i].bjdCode+'>' + codeList['list'][i].bjdName + '</option>' );  

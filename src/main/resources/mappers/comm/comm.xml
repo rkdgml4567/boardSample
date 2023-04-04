@@ -53,26 +53,29 @@
 	</select>
 	<!-- 배치작업 - 기존배치실행확인  -->
 	<select id="getBatWk" parameterType="com.land.vo.prices.PrBatVo" resultType="com.land.vo.prices.PrBatVo">
-		SELECT BAT_YM,
-		       WK_GBN,
+		SELECT WK_GBN,
+			   MAX(BAT_YM)			BAT_YM,
 		       MAX(AREA_CODE) 		AREA_CODE,
 		       CONTRACT_YM,
 		       MAX(RESULT_CD)		RESULT_CD,
 		       MAX(RESULT_MSG)		RESULT_MSG,
 		       MAX(NUM_OF_ROWS) 	NUM_OF_ROWS,
 		       MAX(PAGE_NO) 		PAGE_NO,
-		       SUM(WK_CNT) 			WK_CNT,
-		       SUM(TOT_CNT) 		TOT_CNT
+		       MAX(WK_CNT) 			WK_CNT,
+		       MAX(TOT_CNT) 		TOT_CNT
 		  FROM TB_CM_M_PR_BAT 
-		 WHERE BAT_YM 		= #{batYm}
+		 WHERE 1 =1 
 		   AND WK_GBN 		= #{wkGbn}
-		   AND CONTRACT_YM = #{contractYm}
+		   AND CONTRACT_YM  = (SELECT MAX(CONTRACT_YM) 
+		   						 FROM TB_CM_M_PR_BAT
+		      					 WHERE WK_GBN 		= #{wkGbn}
+		      				  )
 		   <if test='areaCode != null'>
 		   AND AREA_CODE 	= #{areaCode}
-		   GROUP BY BAT_YM, WK_GBN, AREA_CODE, CONTRACT_YM
+		   GROUP BY  WK_GBN, AREA_CODE, CONTRACT_YM
 		   </if>
 		   <if test='areaCode == null'>
-		   GROUP BY BAT_YM, WK_GBN, CONTRACT_YM
+		   GROUP BY  WK_GBN, CONTRACT_YM
 		   </if>
 	</select>
 	<!-- 배치작업등록 -->
@@ -186,11 +189,11 @@
 			,#{item.bjdUmdCode}         AS BJD_UMD_CODE    
 			,#{item.bjdJibunCode}       AS BJD_JIBUN_CODE  
 			,#{item.kaptName}           AS KAPT_NAME       
-			,#{item.mm}                 AS MM              
-			,#{item.dd}                 AS DD              
+			, LPAD(#{item.mm}, 2, '0')  AS MM              
+			, LPAD(#{item.dd}, 2, '0')  AS DD              
 			,#{item.sn}                 AS SN              
 			,#{item.areaUnit}           AS AREA_UNIT       
-			,#{item.jibun}              AS JIBUN           
+			,NVL(#{item.jibun}, ' ')    AS JIBUN           
 			,#{item.areaCode}           AS AREA_CODE       
 			,#{item.floor}              AS FLOOR           
 			,#{item.modUser}            AS MOD_USER        
@@ -199,5 +202,48 @@
 	    </foreach>
 	    )  A
 		</update>
+	<!-- 공통_시세_M_아파트 등록 -->
+	<update id="regPrAptMm" parameterType="com.land.vo.prices.AptVo">
+	  BEGIN
+	 	DELETE FROM TB_PR_M_APT
+				WHERE TR_GBN 		= #{trGbn} ;
+				  
+		INSERT INTO TB_PR_M_APT 
+		      (
+		       TR_GBN,
+		       BJD_CODE,
+		       CONTRACT_YMD,
+		       KAPT_NAME,
+		       AREA_UNIT,
+		       TR_AMT,
+		       DEPOSIT_AMT,
+		       RENT_AMT,
+		       BAT_YM,
+		       MOD_USER,
+		       MOD_DATE
+		       )
+		SELECT #{trGbn}                       AS TR_GBN       -- 거래구분 : 11 아파트 매매
+		      , BJD_SGG_CODE || BJD_UMD_CODE  AS BJD_CODE
+		      , YYYY || MM || DD      	      AS CONTRACT_YMD
+		      , KAPT_NAME                     AS KAPT_NAME 
+		      , AREA_UNIT                     AS AREA_UNIT 
+		      , MAX(TR_AMOUNT)                AS TR_AMT       -- 거래금액
+		      , 0                             AS DEPOSIT_AMT  -- 보증금
+		      , 0                             AS RENT_AMT     -- 월세
+		      , MAX(BAT_YM)                   AS BAT_YM       -- 
+		      , 'BAT' AS MOD_USER
+		      , SYSDATE AS MOD_DATE
+		  FROM TB_CM_H_PR_BAT_APTMM
+		 WHERE YYYY 	= SUBSTR(#{contractYmd}, 1, 4)
+		   AND MM 		= SUBSTR(#{contractYmd}, 5, 2)
+		 GROUP BY YYYY ,
+		       MM ,
+		       DD ,
+		       BJD_SGG_CODE ,
+		       BJD_UMD_CODE ,
+		       KAPT_NAME ,
+		       AREA_UNIT ;
+	END;
+	</update>
 </mapper>
  
