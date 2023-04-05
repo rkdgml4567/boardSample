@@ -14,8 +14,14 @@ public class NewsServiceImpl implements NewsService {
 	@Inject
 	NewsDao newsDao;
 	
+	@Override
 	public List getNewsList() { 
 		return newsDao.getNewsList();
+	}
+	
+	@Override
+	public List getNewsList(String keyword) {
+		return newsDao.getNewsList(keyword);
 	}
 
 	@Override
@@ -24,7 +30,7 @@ public class NewsServiceImpl implements NewsService {
 	}
 
 	@Override
-	public List getAdditionalNewsList(int page) {
-		return newsDao.getAdditionalNewsList(page);
+	public List getAdditionalNewsList(int page, String keyword) {
+		return newsDao.getAdditionalNewsList(page, keyword);
 	}
 }

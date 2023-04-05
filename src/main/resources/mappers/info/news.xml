@@ -3,21 +3,21 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="news"> <!-- Repository와 연동을 위해 사용될 namespace -->
-	<select id="getList" resultType="com.land.vo.info.NewsVo"> <!-- 조회된 값을 Cart클래스에 담아 return -->
+	<select id="getList" resultType="com.land.vo.info.NewsVo" parameterType="String">
 		<![CDATA[
 			select *
 			from TB_IN_M_NEWS
-			where rownum <= 10
+			where title LIKE '%'||#{keyword}||'%' and rownum <= 10
 		]]>
 	</select>
 	
-	<select id="getAdditionalList" resultType="com.land.vo.info.NewsVo" parameterType="Integer"> <!-- 조회된 값을 Cart클래스에 담아 return -->
+	<select id="getAdditionalList" resultType="com.land.vo.info.NewsVo" parameterType="com.land.vo.info.KeywordPagingVo">
 		<![CDATA[
 			select * from
 			(
 				select rownum as rn, TB_IN_M_NEWS.*
 				from TB_IN_M_NEWS
-				where rownum <= (10 * #{page})
+				where title LIKE '%'||#{keyword}||'%' and rownum <= (10 * #{page})
 			)
 			where rn > (10 * (#{page}-1))
 			
