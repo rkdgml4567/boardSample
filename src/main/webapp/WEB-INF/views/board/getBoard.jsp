@@ -8,6 +8,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ page session="false"%>
+
 <html>
 <head>
 <title>부동산종합정보</title>
@@ -91,92 +92,43 @@
 
 
 					<div id="subTitle1">
-						<p>전세사기정보</p>
+						<p>게시글</p>
 					</div>
 		</div>
-<div class="mx-auto text-center">
+<section class="text-center ">
 
-<hr>
-</div>
-<div class="justify-content-center text-center w-50 mx-auto">
-<table class="table mt-5">
-  <thead>
-    <tr>
-      <th scope="col">#</th>
-      <th scope="col">제목</th>
-      <th scope="col">작성자</th>
-      <th scope="col">등록일</th>
-      <th scope="col">게시판</th>
-    </tr>
-  </thead>
+	<table class="table table-sm table-bordered w-50 mx-auto mt-5">
+
   <tbody class="font-weight-bold">
-   <c:forEach items="${list}" var="board">
-                	<tr>             		
-                		<td><c:out value="${board.bno}"/></td>
-						<td>	                		
-                		<a  class="list-group-item-action active"href='/board/getBoard?bno=<c:out value="${board.bno}"/>'>
-                		<c:out value="${board.title}"></c:out>
-                		</a>
-                		</td>
-                		<td><c:out value="${board.writer}"/></td>
-                		<td><fmt:formatDate value="${board.regDate}" pattern="yyyy-MM-dd"/></td>
-                		<td><c:out value="${board.btype}"/></td>
-                	</tr>
-                </c:forEach>
+  
+  <tr>
+      <td class="bg-primary text-white w-50 text-dark text-center">NO</td>
+      <td><c:out value="${get.bno}"></c:out></td>
+
+    </tr>
+  
+    <tr>
+      <td class="bg-primary text-white w-50 text-dark text-center">등록일</td>
+      <td><fmt:formatDate pattern="yyyy-MM-dd" value="${get.regDate}" /></td>
+
+    </tr>
+    <tr> 
+      <td class="bg-primary text-white w-50 text-dark text-center ">작성자</td>
+      <td><c:out value="${get.writer}"></c:out></td>
+
+    </tr>
+   
   </tbody>
 </table>
+    <h2 class="mt-5"><c:out value="${get.title}"></c:out></h2>
+
+    
+   	
+</section>
+
+<p class="text-justify w-50 mx-auto mt-5"><c:out value="${get.content}"></c:out></p>
+<div class="col text-center">
+<button type="button" onclick="javascript:window.history.back(); " class="btn btn-danger fixed-bottom ">뒤로가기</button>
 </div>
-	<div class="d-flex justify-content-center">
-					<nav aria-label="Page navigation example ">
- 					 <ul class="pagination justify-content-center">
-						<c:if test="${pageMaker.prev}">
-							<li class="paginate_button previous"><a class="page-link"
-								href="${pageMaker.startPage -1}">Previous</a></li>
-						</c:if>
-
-						<c:forEach var="num" begin="${pageMaker.startPage}"
-		 					end="${pageMaker.endPage}">
-							<li class="page-item paginate_button ${pageMaker.cri.pageNum == num ? "active":""} ">
-								<a class="page-link" href="${num}">${num}</a>
-							</li>
-						</c:forEach>
-
-						<c:if test="${pageMaker.next}">
-							<li class="paginate_button next"><a  class="page-link"
-								href="${pageMaker.endPage +1 }">Next</a></li>
-						</c:if>
-					</ul>
-				</nav>
-		</div>
-				
-				
-				
-				<form id='actionForm' action="/board/adminList " method='get'>
-				
-				<input type='hidden' name='pageNum' value='${pageMaker.cri.pageNum}'>
-				<input type='hidden' name='amount' value='${pageMaker.cri.amount}'>
-
-				</form>
-		
-		<script type="text/javascript">
-			$(document).ready(function(){
-				
-				var actionForm = $("#actionForm")
-				
-				$(".paginate_button a").on("click",function(e){
-					e.preventDefault();
-					
-					console.log('click');
-					
-					actionForm.find("input[name='pageNum']").val($(this).attr("href"));
-					
-					actionForm.submit();
-				});
-			
-				
-			})
-		</script>
-
-
 </body>
 </html>

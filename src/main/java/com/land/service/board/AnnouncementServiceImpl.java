@@ -12,12 +12,12 @@ import com.land.vo.board.Criteria;
 import lombok.AllArgsConstructor;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j;
+import lombok.extern.log4j.Log4j2;
 
 @Service
-@Log4j
+@Log4j2
 @AllArgsConstructor
 public class AnnouncementServiceImpl implements AnnouncementService{
-	
 	@Setter(onMethod_=@Autowired)
 	private BoardMapper mapper;
 	
@@ -67,6 +67,18 @@ public class AnnouncementServiceImpl implements AnnouncementService{
 	public List<BoardVO> notice(Criteria cri) {
 		// TODO Auto-generated method stub
 		return mapper.notice(cri);
+	}
+	
+	@Override
+	public int landScamTotal() {
+		// TODO Auto-generated method stub
+		return mapper.landScamTotal();
+	}
+	
+	@Override
+	public int noticeTotal() {
+		// TODO Auto-generated method stub
+		return mapper.noticeTotal();
 	}
 	
 

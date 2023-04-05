@@ -42,9 +42,15 @@ public class BoardController {
 		model.addAttribute("pageMaker",new PageDTO(cri,total));
 		
 	}
-	@GetMapping("/adminGet")
+	@GetMapping("/getBoard")
 	public void getAnnouncement(@RequestParam("bno")Long bno,Model model) {
 		log.info("get In announcementController"+bno);
+		model.addAttribute("get",service.get(bno));
+	}
+	
+	@GetMapping("/boardGet")
+	public void getBoard(@RequestParam("bno")Long bno,Model model) {
+		log.info("getBoard bno:"+bno);
 		model.addAttribute("get",service.get(bno));
 	}
 	
@@ -72,7 +78,7 @@ public class BoardController {
 		
 		model.addAttribute("list",service.notice(cri));
 		
-		int total=service.getTotal();
+		int total=service.noticeTotal();
 		
 		
 		log.info("total:"+total);
@@ -86,7 +92,7 @@ public class BoardController {
 		
 		model.addAttribute("list",service.landscam(cri));
 		
-		int total=service.getTotal();
+		int total=service.landScamTotal();
 		
 		
 		log.info("total:"+total);
@@ -111,3 +117,4 @@ public class BoardController {
 	
 	
 }
+
