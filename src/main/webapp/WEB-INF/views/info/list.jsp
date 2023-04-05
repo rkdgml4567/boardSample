@@ -53,8 +53,54 @@ hr {
 <script type="text/javascript">
 	let paging = 2
 	function handleClick() {
-		$.get("more", {
+		// keyword parsing
+		const urlParameter = window.location.search
+		const url = new URLSearchParams(urlParameter)
+		const keyword = url.get('keyword')
+		
+		// ajax
+		$.ajax({
+			type: "GET",
+			url: "more",
+			data: {paging: paging, keyword: keyword},
+			contentType: 'application/json; charset=utf-8',
+			success: function(data) {
+				paging++
+				
+				let articleElement = ""
+				for(let i=0; i<data.list.length; i++) {
+					const title = data.list[i].title
+					const content = data.list[i].content
+					const href = data.list[i].href
+					const img = data.list[i].img
+					
+					const element =
+						'<a href=' + href + ' target="_blank">' +
+							'<article>' +
+								'<div class="txt_area">' +
+									'<h3>' + title + '</h3>' +
+									'<p>' + content + '</p>' +
+								'</div>' +
+								'<img src=' + img + 'alt="이미지" class="news_img" />' +
+							'</article>' + 
+						'</a>' +
+						'<hr />'
+					
+					articleElement += element
+				}
+				
+				// html 붙이기
+				$("hr").last().after(articleElement)
+			},
+			error: function(data) {
+				console.log(data)
+			}
+		})
+		
+		/* $.get("more", {
 			'data': paging,
+			'keyword': keyword,
+			contentType: "application/x-www-form-urlencoded; charset=UTF-8"
 		},function(data, status) {
 			paging++
 			
@@ -82,7 +128,7 @@ hr {
 			
 			// html 붙이기
 			$("hr").last().after(articleElement)
-		})
+		}) */
 	}
 </script>
 </head>

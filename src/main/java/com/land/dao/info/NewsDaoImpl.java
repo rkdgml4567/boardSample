@@ -7,6 +7,7 @@ import javax.inject.Inject;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
+import com.land.vo.info.KeywordPagingVo;
 import com.land.vo.info.NewsVo;
 
 @Repository
@@ -20,12 +21,17 @@ public class NewsDaoImpl implements NewsDao {
 	}
 
 	@Override
+	public List<NewsVo> getNewsList(String keyword) {
+		return sqlSession.selectList("news.getList", keyword);
+	}
+	
+	@Override
 	public void insertList(List<NewsVo> newsList) {
 		sqlSession.insert("news.insertList", newsList);
 	}
 
 	@Override
-	public List<NewsVo> getAdditionalNewsList(int page) {
-		return sqlSession.selectList("news.getAdditionalList", page);
+	public List<NewsVo> getAdditionalNewsList(int page, String keyword) {
+		return sqlSession.selectList("news.getAdditionalList", new KeywordPagingVo(page, keyword));
 	}
 }

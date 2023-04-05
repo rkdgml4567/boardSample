@@ -8,6 +8,19 @@
 <title>부동산종합정보</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <link rel="stylesheet" href="/resources/css/common.css">
+<link href="/resources/css/bootstrap.css" rel="stylesheet">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<style type="text/css">
+header div a h1 {
+	margin-top: 40px;
+}
+#searchDiv {
+	max-width: 350px !important;
+	margin: 0 auto !important;
+	margin-top: 80px !important;
+	float: unset !important;
+}
+</style>
 </head>
 <body>
 	<!-- Body container START -->
@@ -23,13 +36,13 @@
 		</header>
 
 		<!-- Center START -->
-
 		<div id="contents200">
-			<div id="searchDiv">
-				<P>The time on the server is ${serverTime} .하하하하</P>
-				<P>test1 = ${test1} .하하하하</P>
-				<P>test2 = ${test2} .하하하하</P>
-			</div>
+			<form id="searchDiv" action="/info/news/list" method="GET">
+				<div class="input-group mb-3">
+				  <input type="text" name="keyword" class="form-control" id="searchInput" placeholder="부동산 전세/월세" />
+				  <button class="btn btn-outline-primary" type="submit">검색</button>
+				</div>
+			</form>
 		</div>
 		<!-- Center END -->
 
