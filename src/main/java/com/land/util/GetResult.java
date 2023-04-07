@@ -1,5 +1,6 @@
 package com.land.util;
 
+import com.land.vo.prices.PrBatAptJsVo;
 import com.land.vo.prices.PrBatAptMmVo;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -19,6 +20,9 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
 public class GetResult {
+  /*
+   * 11.아파트매매 조회 및 파싱
+   */
   public HashMap<String, Object> AptMmParseXml(String contractYmd, int pageNo, String areaCd) {
     int tCnt = 0;
     String url = "http://openapi.molit.go.kr/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcAptTradeDev";
@@ -142,6 +146,151 @@ public class GetResult {
                 break;
               case "일련번호":
                 aptRst.setSn(node.getTextContent().trim());
+                break;
+              case "전용면적":
+                aptRst.setAreaUnit(Double.parseDouble(node.getTextContent().trim()));
+                break;
+              case "지역코드":
+                aptRst.setAreaCode(node.getTextContent().trim());
+                break;
+            } 
+          } 
+          aptRst.setModUser("XML");
+          itemList.add(i, aptRst);
+        } 
+        int totPage = (tCnt % 10 == 0) ? (int)Math.floor((tCnt / 10)) : ((int)Math.floor((tCnt / 10)) + 1);
+        if (totPage != pageNo)
+          pageNo++; 
+        map.put("totCnt", Integer.valueOf(tCnt));
+        map.put("pageNo", Integer.valueOf(pageNo));
+        map.put("totPage", Integer.valueOf(totPage));
+        map.put("numOfRows", numOfRows);
+        map.put("resultCd", resultCd);
+        map.put("resultMsg", resultMsg);
+        map.put("itemList", itemList);
+        map.put("wkCnt", Integer.valueOf(nodeList.getLength()));
+      } else {
+        map.put("totCnt", Integer.valueOf(0));
+        map.put("wkCnt", Integer.valueOf(0));
+        map.put("pageNo", Integer.valueOf(0));
+        map.put("totPage", Integer.valueOf(0));
+        map.put("numOfRows", Integer.valueOf(10));
+        map.put("resultCd",  resultCd);
+        map.put("resultMsg", "END");
+      } 
+      System.out.println("map=" + map.toString());
+    } catch (IOException|javax.xml.parsers.ParserConfigurationException|org.xml.sax.SAXException e) {
+      e.printStackTrace();
+    } 
+    return map;
+  }
+  
+  /*
+   * 12.아파트전세 조회 및 파싱
+   */
+  public HashMap<String, Object> AptJsParseXml(String contractYmd, int pageNo, String areaCd) {
+    int tCnt = 0;
+    String url = "http://openapi.molit.go.kr:8081/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcAptRent";
+    
+    HashMap<String, Object> map = new HashMap<>();
+    try {
+      BufferedReader rd;
+      StringBuilder urlBuilder = new StringBuilder(url);
+      String numOfRows = "10";
+     
+      urlBuilder.append("?" + URLEncoder.encode("serviceKey", "UTF-8") + 
+          "=YJch%2FTcqdanC6AZOscVqhGOZUMztRCKE7FMs9s9XF45N4UgLL9Lib3RXt%2Bf%2FQYOAJJT6GQfLHh4iDRZh5ihdjg%3D%3D");
+     // urlBuilder.append("&" + URLEncoder.encode("pageNo", "UTF-8") + "=" + URLEncoder.encode(String.valueOf(pageNo), "UTF-8"));
+      urlBuilder.append("&" + URLEncoder.encode("LAWD_CD", "UTF-8") + "=" + URLEncoder.encode(areaCd, "UTF-8"));
+      urlBuilder.append("&" + URLEncoder.encode("DEAL_YMD", "UTF-8") + "=" + URLEncoder.encode(contractYmd, "UTF-8"));
+      URL urlAll = new URL(urlBuilder.toString());
+      HttpURLConnection conn = (HttpURLConnection)urlAll.openConnection();
+      conn.setRequestMethod("GET");
+      conn.setRequestProperty("Content-type", "application/xml");
+      if (conn.getResponseCode() >= 200 && conn.getResponseCode() <= 300) {
+        rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+      } else {
+        rd = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
+      } 
+      String sb = "";
+      String line;
+      while ((line = rd.readLine()) != null)
+        sb = String.valueOf(sb) + line.trim(); 
+      rd.close();
+      conn.disconnect();
+      DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+      factory.setNamespaceAware(true);
+      DocumentBuilder builder = null;
+      builder = factory.newDocumentBuilder();
+      System.out.println(sb.toString());
+      Document doc = null;
+      InputSource is = new InputSource(new StringReader(sb));
+      doc = builder.parse(is);
+      String resultCd = doc.getElementsByTagName("resultCode").item(0).getTextContent();
+      String resultMsg = doc.getElementsByTagName("resultMsg").item(0).getTextContent();
+      NodeList nodeList = doc.getElementsByTagName("item");
+      
+      if (resultCd.equals("00") && doc.getElementsByTagName("totalCount").item(0) != null) {
+        tCnt = Integer.valueOf(doc.getElementsByTagName("totalCount").item(0).getTextContent()).intValue();
+      } else {
+        tCnt = 0;
+      } 
+
+      if (tCnt > 0) {
+        List<PrBatAptJsVo> itemList = new ArrayList<>();
+        for (int i = 0; i < nodeList.getLength(); i++) {
+          NodeList child = nodeList.item(i).getChildNodes();
+          PrBatAptJsVo aptRst = new PrBatAptJsVo();
+          
+          aptRst.setSeq(i);
+          
+          for (int j = 0; j < child.getLength(); j++) {
+            Node node = child.item(j);
+           
+            String str = node.getNodeName();
+           
+            switch (str) {
+              case "갱신요구권사용":
+                aptRst.setReNewUse(node.getTextContent().trim());
+                break;
+              case "년":
+                aptRst.setYyyy(node.getTextContent().trim());
+                break;
+              case "월":
+                aptRst.setMm(node.getTextContent().trim());
+                break;
+              case "일":
+                aptRst.setDd(node.getTextContent().trim());
+                break;
+              case "층":
+                aptRst.setFloor(node.getTextContent().trim());
+                break;
+              case "지번":
+                aptRst.setJibun(node.getTextContent().trim());
+                break;
+              case "법정동":
+                aptRst.setBjdName(node.getTextContent().trim());
+                break;
+              case "아파트":
+                aptRst.setKaptName(node.getTextContent().trim());
+                break;
+              case "계약구분":
+                aptRst.setContractGbn(node.getTextContent().trim());
+                break;
+              case "계약기간":
+                aptRst.setContractPer(node.getTextContent().trim());
+                break;
+              case "보증금액":
+                  aptRst.setDepositAmt(node.getTextContent().trim().replaceAll(",", ""));
+                  break;
+              case "월세":
+                  aptRst.setRentAmt(node.getTextContent().trim().replaceAll(",", ""));
+                  break;
+              case "종전계약보증금":
+                  aptRst.setPreDepositAmt(node.getTextContent().trim().replaceAll(",", ""));
+                  break;   
+              case "종전계약월세":
+                aptRst.setPreRentAmt(node.getTextContent().trim());
                 break;
               case "전용면적":
                 aptRst.setAreaUnit(Double.parseDouble(node.getTextContent().trim()));

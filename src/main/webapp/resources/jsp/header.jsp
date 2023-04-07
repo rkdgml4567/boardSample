@@ -34,8 +34,8 @@
 					<li><a href="#">통계</a></li>
 					<li><a href="#">커뮤니티</a>
 						<ul>
-							<li><a href="#">공지사항</a></li>
-							<li><a href="#">전세사기정보</a></li>
+							<li><a href="/board/notice">공지사항</a></li>
+							<li><a href="/board/landscam">전세사기정보</a></li>
 						</ul></li>
 				</ul>
 			</nav>

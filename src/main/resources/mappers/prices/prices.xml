@@ -29,30 +29,44 @@
 		FROM (
 	        SELECT ROW_NUMBER() OVER (ORDER BY KAPT_NAME) NUM
 	             , A.*
-	          FROM TB_PR_M_APT A
+	          FROM TB_PR_M_INFO  A
 	          WHERE 1 = 1
-			 <if test="searchTrGbn !=null and searchTrGbn != '' ">
-				AND TR_GBN = #{searchTrGbn}
-			</if>
+			 <if test="searchTrGbn == '1' "> <!-- 매매거래금액 -->
+				AND TR_AMT BETWEEN #{minAmt} AND #{maxAmt}
+			 </if>
+			 <if test="searchTrGbn == '2' "> <!-- 전월세 보증금액 -->
+				AND DEPOSIT_AMT BETWEEN #{minAmt} AND #{maxAmt}
+			 </if>
+			 <if test="searchTrGbn == '3' "> <!-- 매매거래금액 -->
+				AND RENT_AMT BETWEEN #{minAmt} AND #{maxAmt}
+			 </if>
 			<if test="searchNm !=null and searchNm != '' ">
 				AND KAPT_NAME LIKE #{searchNm}|| '%'
 			</if>
-			  AND BJD_CODE LIKE #{searchCd} || '%'
+			  AND BJD_CODE LIKE SUBSTR(#{searchCd}, 0,8) || '%'  -- 법정동 시군구,읍면동  총 8자리 
+			  AND AREA_UNIT BETWEEN #{minUnit} AND #{maxUnit}
 	        ORDER BY KAPT_NAME
         	) 
 		WHERE NUM BETWEEN #{firstIndex} + 1 AND #{firstIndex} + #{recordCountPerPage}
 	</select>
 	<select id="getAptListTotCnt" parameterType="com.land.vo.prices.AptVo" resultType="java.lang.Integer">
 	 	SELECT COUNT(*)
-	 	  FROM TB_PR_M_APT
+	 	  FROM TB_PR_M_INFO
 		WHERE 1 = 1
-	 	<if test="searchTrGbn !=null and searchTrGbn != '' ">
-			AND TR_GBN = #{searchTrGbn}
-		</if> 
+	 	 <if test="searchTrGbn == '1' "> <!-- 매매거래금액 -->
+			AND TR_AMT BETWEEN #{minAmt} AND #{maxAmt}
+		 </if>
+		 <if test="searchTrGbn == '2' "> <!-- 전월세 보증금액 -->
+			AND DEPOSIT_AMT BETWEEN #{minAmt} AND #{maxAmt}
+		 </if>
+		 <if test="searchTrGbn == '3' "> <!-- 매매거래금액 -->
+			AND RENT_AMT BETWEEN #{minAmt} AND #{maxAmt}
+		 </if>
 		<if test="searchNm !=null and searchNm != '' ">
 			AND KAPT_NAME LIKE #{searchNm}|| '%'
 		</if>
-			AND BJD_CODE LIKE #{searchCd} || '%'
+			AND BJD_CODE LIKE SUBSTR(#{searchCd}, 0,8) || '%'
+			AND AREA_UNIT BETWEEN #{minUnit} AND #{maxUnit}
 	</select>
 </mapper>
  

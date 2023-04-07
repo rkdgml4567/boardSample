@@ -38,7 +38,7 @@
 			    AND BJD_CODE != SUBSTR(BJD_CODE,1,5) || '00000'
 				AND BJD_CODE = SUBSTR(BJD_CODE,1,8) || '00'
 				AND BJD_UMD_CODE != '00000'
-				AND SUBSTR(BJD_CODE,1,5) LIKE #{searchCd} || '%'
+				AND SUBSTR(BJD_CODE,1,5) LIKE SUBSTR(#{searchCd},1,5) || '%'
 			</if>
 		  ORDER BY BJD_CODE
 	</select>
@@ -129,7 +129,7 @@
 				SYSDATE
 		       )
 	</update>
-	<!-- 기존 시세_아파트_매매이력 삭제 -->
+	<!-- 기존 공통_시세_아파트_매매이력 삭제 -->
 	<delete id="delPrAptMmHis" parameterType="com.land.vo.prices.PrBatAptMmVo"> 
 	 DELETE FROM TB_CM_H_PR_BAT_APTMM
 	     WHERE BAT_YM		= #{batYm}
@@ -138,7 +138,7 @@
 	      AND  MM			= #{mm}
 	     <!--  AND  DD			= #{dd} 계약년월 단위로 삭제 -->
 	</delete>
-	<!-- 시세_아파트_매매이력 등록 insert id="" 라고하면 오류 -->
+	<!-- 시세_공통_아파트_매매이력 등록 insert id="" 라고하면 오류 -->
 	<update id="regPrAptMmHis" parameterType="com.land.vo.prices.PrBatAptMmVo">
 	INSERT INTO TB_CM_H_PR_BAT_APTMM (  SEQ, BAT_YM,
 	       TR_AMOUNT,
@@ -202,48 +202,182 @@
 	    </foreach>
 	    )  A
 		</update>
-	<!-- 공통_시세_M_아파트 등록 -->
+		
+		<!-- 기존 공통_시세_아파트_전세이력 삭제 -->
+	<delete id="delPrAptJsHis" parameterType="com.land.vo.prices.PrBatAptJsVo"> 
+	 DELETE FROM TB_CM_H_PR_BAT_APTJS
+	     WHERE BAT_YM		= #{batYm}
+	      AND  AREA_CODE 	= #{areaCode}
+	      AND  YYYY			= #{yyyy}
+	      AND  MM			= #{mm}
+	     <!--  AND  DD			= #{dd} 계약년월 단위로 삭제 -->
+	</delete>
+	<!-- 시세_공통_아파트_매매이력 등록 insert id="" 라고하면 오류 -->
+	<update id="regPrAptJsHis" parameterType="com.land.vo.prices.PrBatAptJsVo">
+	INSERT ALL
+	
+	<foreach collection="itemList" item="item" index="index" separator=" " close="SELECT * FROM DUAL"> 
+	      INTO TB_CM_H_PR_BAT_APTJS
+	      (SEQ, 
+	       BAT_YM,
+	       ST_YYYY,
+	       YYYY,
+	       BJD_NAME,
+	       KAPT_NAME,
+	       MM,
+	       DD,
+	       AREA_UNIT,
+	       JIBUN,
+	       AREA_CODE,
+	       FLOOR,
+	       DEPOSIT_AMT, 
+	       RENT_AMT, 
+	       PRE_DEPOSIT_AMT, 
+	       PRE_RENT_AMT, 
+	       CONTRACT_GBN, 
+	       CONTRACT_PER, 
+	       RE_NEW_USE, 
+	       MOD_USER,
+	       MOD_DATE )
+	       VALUES 
+	       ( #{item.seq}
+	        ,#{batYm}                 	             
+			,NVL(#{item.stYyyy},'0000')         
+			,#{item.yyyy}                       
+			,#{item.bjdName}                
+			,#{item.kaptName}               
+			, LPAD(#{item.mm}, 2, '0')               
+			, LPAD(#{item.dd}, 2, '0')                           
+			,#{item.areaUnit}               
+			,NVL(#{item.jibun}, ' ')             
+			,#{item.areaCode}               
+			,NVL(#{item.floor}, ' ')    	 
+			,NVL(#{item.depositAmt}, '0')	
+			,NVL(#{item.rentAmt}, '0')		
+			,NVL(#{item.preDepositAmt}, '0')
+			,NVL(#{item.preRentAmt}, '0') 	
+			,NVL(#{item.contractGbn},' ') 	
+			,NVL(#{item.contractPer},' ')	
+			,NVL(#{item.reNewUse}, ' ') 
+			,#{item.modUser}       		    
+			,SYSDATE                    
+			)              
+	    </foreach>
+
+		</update>	
+		
+	<!-- 공통_시세_M_정보 등록 -->
+	<!-- 11.아파트매매 -->
+	<sql id="aptMm">
+		SELECT  #{trGbn}                       			  AS TR_GBN   
+					      , BJD_SGG_CODE || BJD_UMD_CODE  AS BJD_CODE
+			              , JIBUN                         AS JIBUN
+					      , KAPT_NAME                     AS KAPT_NAME 
+					      , AREA_UNIT                     AS AREA_UNIT 
+					      , MAX(TR_AMOUNT)                AS TR_AMT       -- 거래금액
+					      , 0              				  AS DEPOSIT_AMT
+					      , 0                 			  AS RENT_AMT
+					      , MAX(BAT_YM)                   AS BAT_YM       
+			              , #{wkGbn}                      AS WK_GBN       -- 11.아파트 매매
+			              , MAX(YYYY || MM || DD)         AS CONTRACT_YMD
+					  FROM TB_CM_H_PR_BAT_APTMM
+			         WHERE YYYY =  SUBSTR(#{contractYmd}, 1, 4)
+			           AND MM 		= SUBSTR(#{contractYmd}, 5, 2)
+					 GROUP BY BJD_SGG_CODE ,
+					       BJD_UMD_CODE ,
+			               JIBUN,
+					       KAPT_NAME ,
+					       AREA_UNIT
+	</sql>
+	<!-- 12.아파트전세 -->
+	<sql id="aptJs">
+		SELECT 			 #{trGbn}    					  AS TR_GBN   
+					      , X.BJD_SGG_CODE || X.BJD_UMD_CODE  AS BJD_CODE
+			              , JIBUN                         AS JIBUN
+					      , KAPT_NAME                     AS KAPT_NAME 
+					      , AREA_UNIT                     AS AREA_UNIT 
+					      , 0 				              AS TR_AMT       -- 거래금액
+					      , MAX(DEPOSIT_AMT)              AS DEPOSIT_AMT
+					      , MAX(RENT_AMT)                 AS RENT_AMT
+					      , MAX(BAT_YM)                   AS BAT_YM       
+			              , #{wkGbn}                      AS WK_GBN       -- 12.아파트 전세
+			              , MAX(YYYY || MM || DD)         AS CONTRACT_YMD
+					  FROM TB_CM_H_PR_BAT_APTJS A,
+					       TB_CM_M_BJDCD X
+			         WHERE A.AREA_CODE = X.BJD_SGG_CODE
+                       AND X.BJD_NAME  like '%' || A.BJD_NAME
+			           AND YYYY 		=  SUBSTR(#{contractYmd}, 1, 4)
+			           AND MM   		= SUBSTR(#{contractYmd}, 5, 2)
+					 GROUP BY BJD_SGG_CODE ,
+					       BJD_UMD_CODE ,
+			               JIBUN,
+					       KAPT_NAME ,
+					       AREA_UNIT
+	</sql>
 	<update id="regPrAptMm" parameterType="com.land.vo.prices.AptVo">
-	  BEGIN
-	 	DELETE FROM TB_PR_M_APT
-				WHERE TR_GBN 		= #{trGbn} ;
-				  
-		INSERT INTO TB_PR_M_APT 
-		      (
-		       TR_GBN,
-		       BJD_CODE,
-		       CONTRACT_YMD,
-		       KAPT_NAME,
-		       AREA_UNIT,
-		       TR_AMT,
-		       DEPOSIT_AMT,
-		       RENT_AMT,
-		       BAT_YM,
-		       MOD_USER,
-		       MOD_DATE
-		       )
-		SELECT #{trGbn}                       AS TR_GBN       -- 거래구분 : 11 아파트 매매
-		      , BJD_SGG_CODE || BJD_UMD_CODE  AS BJD_CODE
-		      , YYYY || MM || DD      	      AS CONTRACT_YMD
-		      , KAPT_NAME                     AS KAPT_NAME 
-		      , AREA_UNIT                     AS AREA_UNIT 
-		      , MAX(TR_AMOUNT)                AS TR_AMT       -- 거래금액
-		      , 0                             AS DEPOSIT_AMT  -- 보증금
-		      , 0                             AS RENT_AMT     -- 월세
-		      , MAX(BAT_YM)                   AS BAT_YM       -- 
-		      , 'BAT' AS MOD_USER
-		      , SYSDATE AS MOD_DATE
-		  FROM TB_CM_H_PR_BAT_APTMM
-		 WHERE YYYY 	= SUBSTR(#{contractYmd}, 1, 4)
-		   AND MM 		= SUBSTR(#{contractYmd}, 5, 2)
-		 GROUP BY YYYY ,
-		       MM ,
-		       DD ,
-		       BJD_SGG_CODE ,
-		       BJD_UMD_CODE ,
-		       KAPT_NAME ,
-		       AREA_UNIT ;
-	END;
+	  MERGE INTO TB_PR_M_INFO A
+			USING (
+					<!-- 11.아파트 매매 이력테이블 -->
+					<if test='wkGbn == "11"'> 
+			       		<include refid="aptMm"/>
+			       </if>
+			       <!-- 12.아파트 전세 이력테이블 -->
+			       <if test='wkGbn == "12"'>
+			       		<include refid="aptJs"/>	
+			       </if>	
+					
+			       )  B
+			    ON (   A.TR_GBN 	 = B.TR_GBN 
+			    AND A.BJD_CODE 		 = B.BJD_CODE 
+			    AND A.JIBUN 	     = B.JIBUN 
+			    AND A.KAPT_NAME      = B.KAPT_NAME 
+			    AND A.AREA_UNIT      = B.AREA_UNIT 
+			    )
+			     	WHEN MATCHED THEN      -- (비교 조건의)데이터가 있으면
+			        UPDATE
+			            SET
+			                  TR_AMT         = DECODE(#{wkGbn}, '11', B.TR_AMT, '12', A.TR_AMT)   
+			                , DEPOSIT_AMT    = DECODE(#{wkGbn}, '11', A.DEPOSIT_AMT, '12', B.DEPOSIT_AMT) 
+			                , RENT_AMT    	 = DECODE(#{wkGbn}, '11', A.RENT_AMT, '12', B.RENT_AMT)    
+					        , BAT_YM         = B.BAT_YM
+			                , WK_GBN         = B.WK_GBN
+			                , CONTRACT_YMD   = B.CONTRACT_YMD
+			                , MOD_USER       = 'BAT'
+			                , MOD_DATE       = SYSDATE
+					 WHEN NOT MATCHED THEN   -- (비교 조건의)데이터가 없으면
+			        INSERT   
+					      (  TR_GBN 
+					       , BJD_CODE
+					       , JIBUN
+					       , KAPT_NAME
+					       , AREA_UNIT
+					       , TR_AMT
+					       , DEPOSIT_AMT
+					       , RENT_AMT
+					       , BAT_YM
+			               , WK_GBN
+			               , CONTRACT_YMD
+					       , MOD_USER
+					       , MOD_DATE
+					       )
+			               VALUES
+			               (
+			                B.TR_GBN      
+					      , B.BJD_CODE  	     
+			              , B.JIBUN                        
+					      , B.KAPT_NAME                    
+					      , B.AREA_UNIT                    
+					      , DECODE(#{wkGbn}, '11', B.TR_AMT, '12', 0)              
+					      , DECODE(#{wkGbn}, '11', 0, '12', B.DEPOSIT_AMT)                            
+					      , DECODE(#{wkGbn}, '11', 0, '12', B.RENT_AMT)                            
+					      , B.BAT_YM  
+			              , B.WK_GBN
+			              , B.CONTRACT_YMD
+					      , 'BAT' 
+					      , SYSDATE 
+			               )
+		 ;
+		
 	</update>
 </mapper>
  

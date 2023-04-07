@@ -7,17 +7,17 @@
 				pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n" />
 		</Console>
 
-		<!-- <RollingFile name="file" fileName="/filePath/logs.log" filePattern="/filePath/WAS.%i.%d{yyyy-MM-dd}.log"> 
+		 <RollingFile name="file" fileName="C:\logs\dev\logs.log" filePattern="C:\logs\dev\logs.%i.%d{yyyy-MM-dd}.log"> 
 			<PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} 
 			- %msg%n"/> <Policies> <SizeBasedTriggeringPolicy size="100MB"/> </Policies> 
-			<DefaultRolloverStrategy max="10000" fileIndex="min" /> </RollingFile> -->
+			<DefaultRolloverStrategy max="10000" fileIndex="min" /> </RollingFile> 
 	</Appenders>
 
 	<Loggers>
 
-		<Logger name="testProject.com" level="debug" additivity="false">
-			<AppenderRef ref="console" />
-			<!-- <AppenderRef ref="file" /> -->
+		<Logger name="com.land.batch" level="debug" additivity="false">
+			 <AppenderRef ref="console" />
+			 <AppenderRef ref="file" /> 
 		</Logger>
 		<Logger name="testProject.framework" level="debug"
 			additivity="false">
@@ -51,12 +51,12 @@
 		<!-- SQL 로그 출력 -->
 		<Logger name="jdbc.sqlonly" level="DEBUG" additivity="false">
 			<AppenderRef ref="console" />
-			<!-- <AppenderRef ref="file" /> -->
+			<AppenderRef ref="file" /> 
 		</Logger>
 		<Logger name="jdbc.resultsettable" level="DEBUG"
 			additivity="false">
 			<AppenderRef ref="console" />
-			<!-- <AppenderRef ref="file" /> -->
+		    <AppenderRef ref="file" /> 
 		</Logger>
 
 		<!-- Root Logger

@@ -21,7 +21,15 @@
 	 ******************************************************** */
 	function fn_init() {
 		// 첫 입력란에 포커스..
-		document.aptForm.searchSgg.focus();
+		document.aptForm.searchNm.focus();
+		
+		$.ajax({
+		    url: 'https://dapi.kakao.com/v2/local/search/address.json?query=' + encodeURIComponent('서울 광진구 광장동 112'),
+		    headers: { 'Authorization': 'KakaoAK 8d66e864b87e987208f8177b0a743d9e'}, 
+		    type: 'GET'
+		}).done(function(data) {
+		    console.log(data.documents[0].address_name);
+		});
 	}
 
 	/*********************************************************
@@ -36,8 +44,7 @@
 	 * 조회 처리 함수
 	 ******************************************************** */
 	function fn_search() {
-		
-		alert($('#bjdUmd').val());
+
 		document.aptForm.searchCd.value = $('#bjdUmd').val();
 		document.aptForm.pageIndex.value = 1;
 		document.aptForm.submit();
@@ -79,7 +86,7 @@
 	}
 </script>
 </head>
-<body>
+<body onload="fn_init();">
 	<form name="aptForm" action="<c:url value='/prices/apt'/>" method="post" onSubmit="fn_search(); return false;">
 	<input name="pageIndex" type="hidden" value="<c:out value='${searchVO.pageIndex}'/>">
 	<input name="searchCd" type="hidden" value="<c:out value='${searchVO.searchCd}'/>">

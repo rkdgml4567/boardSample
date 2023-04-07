@@ -51,10 +51,14 @@ public class AptController {
     Map<String, Object> codeMap2 = this.commService.getBjdCdList(inLel);
     
     inLel.setSearchLevel("3");
+    
+    log.info("inVo.getSearchCd()>+" + inVo.getSearchCd());
+    
     if (inVo.getSearchCd() != null && !inVo.getSearchCd().isEmpty()) {
-      inLel.setSearchCd(inVo.getSearchCd().substring(0,5));  //법정동코드 5자리 시군구
+      inLel.setSearchCd(inVo.getSearchCd());  //법정동코드 5자리 시군구
     } else {
-      inLel.setSearchCd(codeMap2.get("firstCd").toString().substring(0, 5));
+      inLel.setSearchCd(codeMap2.get("firstCd").toString());
+      inVo.setSearchCd(codeMap2.get("firstCd").toString()); //초기 조회코드
     } 
     Map<String, Object> codeMap3 = this.commService.getBjdCdList(inLel);
     PaginationInfo paginationInfo = new PaginationInfo();

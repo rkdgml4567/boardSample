@@ -29,28 +29,47 @@
 		<beans:property name="prefix" value="/WEB-INF/views/" />
 		<beans:property name="suffix" value=".jsp" />
 	</beans:bean>
-	<context:component-scan base-package="com.sample.*" />
+	<!-- <context:component-scan base-package="com.sample.*" /> -->
 	<context:component-scan base-package="com.land.*" />
 <!-- Spring Quartz Start -->
     <!-- Job -->
     <!-- bean의 id인 job은 원하는 이름으로 설정 가능 -->
-    <beans:bean id="job" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+    <!-- 11.아파트매매 -->
+    <beans:bean id="jobAptMm" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
         <!-- property의 ref는 스케줄러 서비스 구현 객체(ServiceImpl)의 bean 이름(다음 코드블럭 참고) -->
-        <beans:property name="targetObject" ref="scheduleJobAptMm" />
+        <beans:property name="targetObject" ref="scheduleJobApt" />
         <!-- property의 value는 스케줄러 서비스 구현 객체에서 스케줄러를 사용할(주기적으로 실행할) 메소드 -->
         <beans:property name="targetMethod" value="saveAptMm" />
+        <!-- 동시 실행 방지 기능(단일 서버에서 작동하는 기능으로 보임) -->
+        <beans:property name="concurrent" value="false" />
+    </beans:bean>
+     <!-- 12.아파트전세 -->
+    <beans:bean id="jobAptJs" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <!-- property의 ref는 스케줄러 서비스 구현 객체(ServiceImpl)의 bean 이름(다음 코드블럭 참고) -->
+        <beans:property name="targetObject" ref="scheduleJobApt" />
+        <!-- property의 value는 스케줄러 서비스 구현 객체에서 스케줄러를 사용할(주기적으로 실행할) 메소드 -->
+        <beans:property name="targetMethod" value="saveAptJs" />
         <!-- 동시 실행 방지 기능(단일 서버에서 작동하는 기능으로 보임) -->
         <beans:property name="concurrent" value="false" />
     </beans:bean>
 
     <!-- Trigger -->
     <!-- bean의 id인 jobTrigger는 원하는 이름으로 설정 가능 -->
-    <beans:bean id="jobTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+    <!-- 11.아파트매매 -->
+    <beans:bean id="jobAptMmBat" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
         <!-- property의 ref는 job의 id와 일치시켜야 함 -->
-        <beans:property name="jobDetail" ref="job" />
+        <beans:property name="jobDetail" ref="jobAptMm" />
         <!-- cron표현식으로 스케줄러가 주기적으로 실행될 기간 설정 가능, 현재 value의 크론식은 1시간마다 -->
         <!-- 초 분 시 일 월 요일 연도  - * 매번 , ? 설정값 없음,  / 값 증가(0/50),  #:5#2 두번째 목요일, -->
-        <beans:property name="cronExpression" value="0 48 * * * ?" />
+        <beans:property name="cronExpression" value="0 0 5 * * ?" />
+    </beans:bean>
+     <!-- 12.아파트전세 -->
+    <beans:bean id="jobAptJsBat" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <!-- property의 ref는 job의 id와 일치시켜야 함 -->
+        <beans:property name="jobDetail" ref="jobAptJs" />
+        <!-- cron표현식으로 스케줄러가 주기적으로 실행될 기간 설정 가능, 현재 value의 크론식은 1시간마다 -->
+        <!-- 초 분 시 일 월 요일 연도  - * 매번 , ? 설정값 없음,  / 값 증가(0/50),  #:5#2 두번째 목요일, -->
+        <beans:property name="cronExpression" value="0 28 * * * ?" />
     </beans:bean>
     
     <!-- Scheduler -->
@@ -61,7 +80,8 @@
             <!-- list안에 작성한 트리거를 추가 -->
             <beans:list>
                 <!-- ref의 bean 값은 트리거 id값 -->
-                <beans:ref bean="jobTrigger" />
+                <beans:ref bean="jobAptMmBat" />
+                <beans:ref bean="jobAptJsBat" />
             </beans:list>
         </beans:property>
         <!-- quartzProperties를 설정 가능한 곳(name 안에서 자동완성(ctrl + space) 기능을 실행해보면 그 외 여러가지 항목이 있음 -->

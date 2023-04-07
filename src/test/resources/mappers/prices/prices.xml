@@ -29,7 +29,7 @@
 		FROM (
 	        SELECT ROW_NUMBER() OVER (ORDER BY KAPT_NAME) NUM
 	             , A.*
-	          FROM TB_M_PR_APT A
+	          FROM TB_PR_M_INFO A
 	          WHERE 1 = 1
 			 <if test="searchTrGbn != null">
 				AND TR_GBN = #{searchTrGbn}
@@ -41,7 +41,7 @@
 	</select>
 	<select id="getAptListTotCnt" parameterType="com.land.vo.prices.AptVo" resultType="java.lang.Integer">
 	 	SELECT COUNT(*)
-	 	  FROM TB_M_PR_APT
+	 	  FROM TB_PR_M_INFO
 		WHERE 1 = 1
 	 	<!-- <if test='searchTrGbn != null |'>
 			AND TR_GBN = #{searchTrGbn}
